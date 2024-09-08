@@ -90,8 +90,8 @@ public class GoalServiceimpl implements GoalService {
             return goalRepository.save(goalFound);
         }
 
-        if(!clientRepository.existsById(id)){
-            throw new ResourceNotFoundException("Cliente no encontrado");
+        if(!goalRepository.existsById(id)){
+            throw new ResourceNotFoundException("Objetivo no encontrado");
         }
         return null;
     }

@@ -36,7 +36,7 @@ public class ClientDTO {
     private String phoneNumber;
 
     @NotBlank(message = "La fecha de nacimiento no puede estar en blanco")
-    @NotNull(message = "La fecha de nacimiento no puede ser nulo")
+    //@NotNull(message = "La fecha de nacimiento no puede ser nulo")
     private LocalDate birthdate;
 
     @NotBlank(message = "El genero no puede estar en blanco")
