@@ -2,6 +2,7 @@ package com.wisecoin.LlamaPay_Api.serviceImpl;
 
 import com.wisecoin.LlamaPay_Api.dtos.ClientDTO;
 import com.wisecoin.LlamaPay_Api.dtos.request.ClientRequestDTO;
+import com.wisecoin.LlamaPay_Api.dtos.response.ClientResponseDTO;
 import com.wisecoin.LlamaPay_Api.entities.Client;
 import com.wisecoin.LlamaPay_Api.exceptions.ResourceNotFoundException;
 import com.wisecoin.LlamaPay_Api.exceptions.ValidationException;
@@ -164,5 +165,19 @@ public class ClientServiceImpl implements ClientService {
         }
 
         return null;
+    }
+
+    @Override
+    public ClientResponseDTO getClientResponseById(long id) {
+        Client client = clientRepository.findById(id).orElse(null);
+        if (client==null) {
+            throw new ResourceNotFoundException("Cliente no encontrado");
+        }
+        ClientResponseDTO clientResponseDto = new ClientResponseDTO(
+                client.getId(), client.getFirstName(), client.getLastName(),
+                client.getEmail(), client.getPhoneNumber(), client.getBirthdate(),
+                client.getGender()
+        );
+        return clientResponseDto;
     }
 }
