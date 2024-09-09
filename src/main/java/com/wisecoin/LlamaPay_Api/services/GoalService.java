@@ -7,7 +7,7 @@ import com.wisecoin.LlamaPay_Api.entities.Goal;
 import java.util.List;
 
 public interface GoalService {
-    public Goal addGoal(Long ClientId, GoalDTO goalDto);
+    public Goal addGoal(Long clientId, GoalDTO goalDto);
     public List<Goal> findByClient(Long clientId);
     public List<Goal> listAll();
     public void deleteGoal(Long id);
