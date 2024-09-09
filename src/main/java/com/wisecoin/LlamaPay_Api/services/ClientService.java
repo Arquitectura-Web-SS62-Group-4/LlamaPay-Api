@@ -2,6 +2,7 @@ package com.wisecoin.LlamaPay_Api.services;
 
 import com.wisecoin.LlamaPay_Api.dtos.ClientDTO;
 import com.wisecoin.LlamaPay_Api.dtos.request.ClientRequestDTO;
+import com.wisecoin.LlamaPay_Api.dtos.response.ClientResponseDTO;
 import com.wisecoin.LlamaPay_Api.entities.Client;
 
 import java.util.List;
@@ -12,4 +13,5 @@ public interface ClientService {
     public void deleteClient(Long id);
     public Client getClientById(Long id);
     public Client updateClient(Long id, ClientRequestDTO clientRequestDTO);
+    public ClientResponseDTO getClientResponseById(long id);
 }

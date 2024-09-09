@@ -2,6 +2,7 @@ package com.wisecoin.LlamaPay_Api.controllers;
 
 import com.wisecoin.LlamaPay_Api.dtos.ClientDTO;
 import com.wisecoin.LlamaPay_Api.dtos.request.ClientRequestDTO;
+import com.wisecoin.LlamaPay_Api.dtos.response.ClientResponseDTO;
 import com.wisecoin.LlamaPay_Api.entities.Client;
 import com.wisecoin.LlamaPay_Api.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,5 +41,11 @@ public class ClientController {
             return new ResponseEntity<>(clientUpdate, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+    }
+
+    @GetMapping("/clients/{id}")
+    public ResponseEntity<ClientResponseDTO> getClientResponseDTOById(@PathVariable("id") Long id){
+        return new ResponseEntity<ClientResponseDTO>(clientService.getClientResponseById(id),
+                HttpStatus.OK);
     }
 }
