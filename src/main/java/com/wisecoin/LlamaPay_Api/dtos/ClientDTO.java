@@ -35,8 +35,8 @@ public class ClientDTO {
     @NotNull(message = "El numero de telefono no puede ser nulo")
     private String phoneNumber;
 
-    @NotBlank(message = "La fecha de nacimiento no puede estar en blanco")
-    //@NotNull(message = "La fecha de nacimiento no puede ser nulo")
+    //@NotBlank(message = "La fecha de nacimiento no puede estar en blanco")
+    @NotNull(message = "La fecha de nacimiento no puede ser nulo")
     private LocalDate birthdate;
 
     @NotBlank(message = "El genero no puede estar en blanco")
@@ -44,4 +44,12 @@ public class ClientDTO {
     @Size(max = 1, message = "El genero debe tener un solo carácter")
     private String gender;
 
+    @NotBlank(message = "El nombre de usuario no puede estar en blanco")
+    @NotNull(message = "El nombre de usuario no puede ser nulo")
+    private String username;
+
+    @NotBlank(message = "La contraseña no puede estar en blanco")
+    @NotNull(message = "La contraseña no puede ser nulo")
+    @Size(min = 8, message = "La contraseña debe tener al menos 8 caracteres")
+    private String password;
 }

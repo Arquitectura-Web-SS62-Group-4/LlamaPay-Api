@@ -4,9 +4,11 @@ import com.wisecoin.LlamaPay_Api.dtos.ClientDTO;
 import com.wisecoin.LlamaPay_Api.dtos.request.ClientRequestDTO;
 import com.wisecoin.LlamaPay_Api.dtos.response.ClientResponseDTO;
 import com.wisecoin.LlamaPay_Api.entities.Client;
+import com.wisecoin.LlamaPay_Api.entities.User;
 import com.wisecoin.LlamaPay_Api.exceptions.ResourceNotFoundException;
 import com.wisecoin.LlamaPay_Api.exceptions.ValidationException;
 import com.wisecoin.LlamaPay_Api.repositories.ClientRepository;
+import com.wisecoin.LlamaPay_Api.repositories.UserRepository;
 import com.wisecoin.LlamaPay_Api.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,14 @@ import java.util.List;
 public class ClientServiceImpl implements ClientService {
     @Autowired
     ClientRepository clientRepository;
+
+    @Autowired
+    UserRepository userRepository;
+
+    private boolean isValidPassword(String password) {
+        String regex = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*(),.?\":{}|<>]).{8,}$";
+        return password != null && password.matches(regex);
+    }
 
     @Override
     public Client addClient(ClientDTO clientDto) {
@@ -60,14 +70,35 @@ public class ClientServiceImpl implements ClientService {
             throw new ValidationException("El género del cliente es inválido. Debe ser 'M' o 'F'");
         }
 
+        //Validando username
+        if(userRepository.existsByUsername(clientDto.getUsername())){
+            throw new ValidationException("El nombre de usuario ya se encuentra registrado");
+        }
+        if(clientDto.getUsername().length()<=2){
+            throw new ValidationException("El nombre de usuario no puede tener menos de tres caracteres");
+        }
+
+        //Validando password
+        if(!isValidPassword(clientDto.getPassword())){
+            throw new ValidationException("La contraseña no cumple con los requisitos");
+        }
+
         //Se crea en false
         boolean has_premiun = false;
+        boolean enabled = true;
 
         Client client = new Client(clientDto.getId(), clientDto.getFirstName(),
                 clientDto.getLastName(), clientDto.getEmail(), clientDto.getPhoneNumber(), clientDto.getBirthdate(),
                 clientDto.getGender(),has_premiun);
 
-        return clientRepository.save(client);
+        clientRepository.save(client);
+
+        User user = new User(0L,clientDto.getUsername(), clientDto.getPassword(),enabled,
+                getClientById(clientRepository.getIdByEmail(clientDto.getEmail())));
+
+        //Se cre el user
+        userRepository.save(user);
+        return client;
     }
 
     @Override
