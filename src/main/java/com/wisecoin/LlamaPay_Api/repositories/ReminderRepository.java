@@ -8,8 +8,5 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ReminderRepository extends JpaRepository<Reminder,Long> {
-
-    List<Reminder> findById();
-    List<Reminder> findByExpiration_Id(LocalDateTime expiration_date);
     List<Reminder> findByClient(Client client);
 }

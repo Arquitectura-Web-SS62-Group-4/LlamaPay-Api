@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Time;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
@@ -36,7 +37,7 @@ public class ReminderServiceImpl implements ReminderService {
             throw new ValidationException("No se puede ingresar esa cantidad");
         }
 
-        if(reminderDTO.getExpiration_date().isBefore(LocalDateTime.now())){
+        if(reminderDTO.getExpiration_date().isBefore(LocalDate.now())){
             throw new ValidationException("Ingresar una fecha correcta");
         }
 
@@ -51,6 +52,7 @@ public class ReminderServiceImpl implements ReminderService {
         Reminder reminder= new Reminder(reminderDTO.getId(),client,reminderDTO.getTitle(),reminderDTO.getDetails(),
                 reminderDTO.getAmount(),reminderDTO.getExpiration_date());
 
+        reminder.setClient(client);
         return reminderRepository.save(reminder);
 
     }
@@ -88,7 +90,7 @@ public class ReminderServiceImpl implements ReminderService {
             }
 
             if(reminderRequestDTO.getExpiration_date()!=null){
-                if(reminderRequestDTO.getExpiration_date().isBefore(LocalDateTime.now())){
+                if(reminderRequestDTO.getExpiration_date().isBefore(LocalDate.now())){
                     throw new ValidationException("La fecha debe que ser posterior a la actual");
                 }
                 reminderFound.setExpiration_date(reminderRequestDTO.getExpiration_date());
