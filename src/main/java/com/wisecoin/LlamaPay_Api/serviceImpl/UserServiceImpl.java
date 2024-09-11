@@ -1,5 +1,7 @@
 package com.wisecoin.LlamaPay_Api.serviceImpl;
 
+import com.wisecoin.LlamaPay_Api.dtos.request.UserLoginDTO;
+import com.wisecoin.LlamaPay_Api.dtos.response.ClientResponseDTO;
 import com.wisecoin.LlamaPay_Api.entities.User;
 import com.wisecoin.LlamaPay_Api.exceptions.ResourceNotFoundException;
 import com.wisecoin.LlamaPay_Api.exceptions.ValidationException;
@@ -35,5 +37,22 @@ public class UserServiceImpl implements UserService {
             throw new ResourceNotFoundException("Usuario no encontrado");
         }
         return user;
+    }
+
+    @Override
+    public ClientResponseDTO getClientResponseByUsernameAndPassword(UserLoginDTO userLoginDto) {
+
+        Long client_id = userRepository.getIdByUsernameAndPassword(userLoginDto.getUsername(),userLoginDto.getPassword());
+        if(client_id == null){
+            throw new ValidationException("El nombre de usuario o contraseña no son válidos");
+        }
+        Boolean enabled = userRepository.getEnabledByUsername(userLoginDto.getUsername());
+
+        if(enabled == false){
+            throw new ValidationException("La cuenta se encuentra eliminada");
+        }
+        ClientResponseDTO clientResponseDTO = clientService.getClientResponseById(client_id);
+
+        return clientResponseDTO;
     }
 }
