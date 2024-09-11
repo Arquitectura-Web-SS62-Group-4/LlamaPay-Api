@@ -1,5 +1,6 @@
 package com.wisecoin.LlamaPay_Api.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -8,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.poi.hpsf.Decimal;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -21,6 +23,7 @@ public class Reminder {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name="client_id" , nullable = false)
     private Client client;
@@ -35,7 +38,7 @@ public class Reminder {
     private Double amount;
 
     @Column(name="expiration_date",nullable=false)
-    private LocalDateTime expiration_date;
+    private LocalDate expiration_date;
 
 
 }

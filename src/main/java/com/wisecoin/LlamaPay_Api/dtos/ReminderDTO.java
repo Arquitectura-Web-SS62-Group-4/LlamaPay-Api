@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -28,11 +29,9 @@ public class ReminderDTO {
     private String details;
 
     @NotNull(message = "La cantidad no puede ser nula")
-    @NotBlank(message = "La cantidad no puede estar vacia")
     private Double amount;
 
     @NotNull(message = "La fecha de expiración no puede ser nula")
-    @NotBlank(message = "La fecha de expiración no puede estar vacia")
-    private LocalDateTime expiration_date;
+    private LocalDate expiration_date;
 
 }
