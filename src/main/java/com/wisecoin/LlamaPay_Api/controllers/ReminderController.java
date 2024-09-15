@@ -27,7 +27,7 @@ public class ReminderController {
                 HttpStatus.OK);
     }
 
-    @GetMapping("/reminder/user/{id}")
+    @GetMapping("/reminders/user/{id}")
     public ResponseEntity<List<Reminder>> listReminderByClient( @PathVariable("id") Long id){
         return new ResponseEntity<List<Reminder>>(reminderService.findByClient(id),
                 HttpStatus.OK);

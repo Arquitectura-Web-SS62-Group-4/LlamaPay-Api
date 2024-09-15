@@ -24,7 +24,7 @@ public class CardController {
                 HttpStatus.OK);
     }
 
-    @GetMapping("/card/user/{id}")
+    @GetMapping("/cards/user/{id}")
     public ResponseEntity<Card> listCardByClient( @PathVariable("id") Long id){
         return new ResponseEntity<Card>(cardService.findByClient(id),
                 HttpStatus.OK);

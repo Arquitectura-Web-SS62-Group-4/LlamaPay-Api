@@ -1,10 +1,8 @@
 package com.wisecoin.LlamaPay_Api.controllers;
 
-import com.wisecoin.LlamaPay_Api.dtos.GoalDTO;
 import com.wisecoin.LlamaPay_Api.dtos.MoneyFlowDTO;
-import com.wisecoin.LlamaPay_Api.dtos.request.GoalRequestDTO;
 import com.wisecoin.LlamaPay_Api.dtos.request.MoneyFlowRequestDTO;
-import com.wisecoin.LlamaPay_Api.entities.Goal;
+import com.wisecoin.LlamaPay_Api.dtos.response.MoneyFlowResponseDTO;
 import com.wisecoin.LlamaPay_Api.entities.MoneyFlow;
 import com.wisecoin.LlamaPay_Api.services.MoneyFlowService;
 import jakarta.validation.Valid;
@@ -20,6 +18,18 @@ import java.util.List;
 public class MoneyFlowController {
     @Autowired
     MoneyFlowService moneyFlowService;
+
+    @GetMapping("/moneyFlows/Spend/month/{month}")
+    public ResponseEntity<List<MoneyFlowResponseDTO>> getMoneyFlowSpendByMonth(@PathVariable("month") int month){
+        return new ResponseEntity<List<MoneyFlowResponseDTO>>(moneyFlowService.getMoneyFlowByTypeAndMonth("Gasto",month),
+                HttpStatus.OK);
+    }
+
+    @GetMapping("/moneyFlows/Income/month/{month}")
+    public ResponseEntity<List<MoneyFlowResponseDTO>> getMoneyFlowIncomeByMonth(@PathVariable("month") int month){
+        return new ResponseEntity<List<MoneyFlowResponseDTO>>(moneyFlowService.getMoneyFlowByTypeAndMonth("Ingreso",month),
+                HttpStatus.OK);
+    }
 
     @GetMapping("/moneyFlows")
     public ResponseEntity<List<MoneyFlow>> listAllMoneyFlows(){
