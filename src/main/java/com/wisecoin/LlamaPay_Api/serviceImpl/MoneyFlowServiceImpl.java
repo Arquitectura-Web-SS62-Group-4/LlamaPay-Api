@@ -3,6 +3,7 @@ package com.wisecoin.LlamaPay_Api.serviceImpl;
 import com.wisecoin.LlamaPay_Api.dtos.MoneyFlowDTO;
 import com.wisecoin.LlamaPay_Api.dtos.request.MoneyFlowRequestDTO;
 import com.wisecoin.LlamaPay_Api.dtos.response.MoneyFlowResponseDTO;
+import com.wisecoin.LlamaPay_Api.dtos.response.MoneyFlowSummaryDTO;
 import com.wisecoin.LlamaPay_Api.entities.Category;
 import com.wisecoin.LlamaPay_Api.entities.Client;
 
@@ -137,6 +138,13 @@ public class MoneyFlowServiceImpl implements MoneyFlowService {
 
     @Override
     public List<MoneyFlowResponseDTO> getMoneyFlowByTypeAndMonth(String type, int month) {
+        if(!("Ingreso".equals(type) || "Gasto".equals(type))){
+            throw new ValidationException("Tipo inválido. Debe ser 'Ingreso' o 'Gasto'.");
+        }
+
+        if(month < 0 || month > 12){
+            throw new ValidationException("El mes ingresado es incorrecto");
+        }
         List<MoneyFlow> moneyFlows = moneyFlowRepository.getListByTypeAndMonth(type, month);
         List<MoneyFlowResponseDTO> moneyFlowDTOS = new ArrayList<>();
 
@@ -159,6 +167,44 @@ public class MoneyFlowServiceImpl implements MoneyFlowService {
             }
         }
         return moneyFlowDTOS;
+    }
+
+    @Override
+    public List<MoneyFlowSummaryDTO> getMoneyFlowNeto(int firstMonth, int finalMonth) {
+        if(firstMonth < 0 || finalMonth < 0){
+            throw new ValidationException("Los meses ingresados son invalidos");
+        }
+        if(firstMonth > finalMonth){
+            throw new ValidationException("El primer debe ser menor al ultimo mes");
+        }
+
+        List<MoneyFlow> moneyFlows = moneyFlowRepository.getListByRange(firstMonth, finalMonth);
+        List<MoneyFlowSummaryDTO> monetFlowSummaryDTOS = new ArrayList<>();
+
+        for (int month = firstMonth; month <= finalMonth; month++) {
+            double totalIngresos = 0;
+            double totalGastos = 0;
+            String monthName = "";
+
+            for (MoneyFlow moneyFlow : moneyFlows) {
+                if (moneyFlow.getDate().getMonthValue() == month) {
+                    // Nombre del mes
+                    monthName = moneyFlow.getDate().getMonth().name();
+
+                    if (moneyFlow.getType().equals("Ingreso")) {
+                        totalIngresos += moneyFlow.getAmount();
+                    } else if (moneyFlow.getType().equals("Gasto")) {
+                        totalGastos += moneyFlow.getAmount();
+                    }
+                }
+            }
+
+            if (!monthName.isEmpty()) {
+                double montoNeto = totalIngresos - totalGastos;
+                monetFlowSummaryDTOS.add(new MoneyFlowSummaryDTO(monthName, montoNeto));
+            }
+        }
+        return monetFlowSummaryDTOS;
     }
 
     @Override

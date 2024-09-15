@@ -20,4 +20,11 @@ public interface MoneyFlowRepository extends JpaRepository<MoneyFlow,Long> {
             "AND EXTRACT(MONTH FROM m.date) = :month ")
     public List<MoneyFlow> getListByTypeAndMonth(@Param("type") String type,
                                                     @Param("month") int month);
+
+    @Query(nativeQuery = true, value = "" +
+            "SELECT * FROM money_flows m " +
+            "WHERE EXTRACT(MONTH FROM m.date) BETWEEN :firstMonth AND :finalMonth")
+    public List<MoneyFlow> getListByRange(@Param("firstMonth") int firstMonth,
+                                          @Param("finalMonth") int finalMonth);
+
 }
