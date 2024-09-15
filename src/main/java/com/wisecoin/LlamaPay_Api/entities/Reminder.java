@@ -39,6 +39,4 @@ public class Reminder {
 
     @Column(name="expiration_date",nullable=false)
     private LocalDate expiration_date;
-
-
 }

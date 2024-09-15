@@ -2,11 +2,12 @@ package com.wisecoin.LlamaPay_Api.serviceImpl;
 
 import com.wisecoin.LlamaPay_Api.dtos.MoneyFlowDTO;
 import com.wisecoin.LlamaPay_Api.dtos.request.MoneyFlowRequestDTO;
+import com.wisecoin.LlamaPay_Api.dtos.response.MoneyFlowResponseDTO;
 import com.wisecoin.LlamaPay_Api.entities.Category;
 import com.wisecoin.LlamaPay_Api.entities.Client;
-import java.util.stream.Collectors;
 
-import com.wisecoin.LlamaPay_Api.entities.Goal;
+import java.util.ArrayList;
+
 import com.wisecoin.LlamaPay_Api.entities.MoneyFlow;
 import com.wisecoin.LlamaPay_Api.exceptions.ResourceNotFoundException;
 import com.wisecoin.LlamaPay_Api.exceptions.ValidationException;
@@ -132,6 +133,32 @@ public class MoneyFlowServiceImpl implements MoneyFlowService {
             throw new ResourceNotFoundException("Flujo de dinero no encontrado");
         }
         return null;
+    }
+
+    @Override
+    public List<MoneyFlowResponseDTO> getMoneyFlowByTypeAndMonth(String type, int month) {
+        List<MoneyFlow> moneyFlows = moneyFlowRepository.getListByTypeAndMonth(type, month);
+        List<MoneyFlowResponseDTO> moneyFlowDTOS = new ArrayList<>();
+
+        for (MoneyFlow moneyFlow : moneyFlows) {
+            String categoryName = moneyFlow.getCategory().getNameCategory();
+            Double currentAmount = moneyFlow.getAmount();
+
+            boolean categoryExists = false;
+            for (MoneyFlowResponseDTO dto : moneyFlowDTOS) {
+                if (dto.getNameCategory().equals(categoryName)) {
+                    // Se suma al monto acumulado
+                    dto.setTotal(dto.getTotal() + currentAmount);
+                    categoryExists = true;
+                    break;
+                }
+            }
+
+            if (!categoryExists) {
+                moneyFlowDTOS.add(new MoneyFlowResponseDTO(categoryName, currentAmount));
+            }
+        }
+        return moneyFlowDTOS;
     }
 
     @Override

@@ -15,6 +15,4 @@ public interface ReminderService {
     public void Reminderdelete(Long id);
     List<Reminder> findByClient(Long id);
     public List<Reminder> ReminderlistAll();
-
-
 }
