@@ -4,12 +4,14 @@ import com.wisecoin.LlamaPay_Api.dtos.ClientDTO;
 import com.wisecoin.LlamaPay_Api.dtos.request.ClientRequestDTO;
 import com.wisecoin.LlamaPay_Api.dtos.response.ClientResponseDTO;
 import com.wisecoin.LlamaPay_Api.entities.Client;
+import com.wisecoin.LlamaPay_Api.entities.Setting;
 import com.wisecoin.LlamaPay_Api.entities.User;
 import com.wisecoin.LlamaPay_Api.exceptions.ResourceNotFoundException;
 import com.wisecoin.LlamaPay_Api.exceptions.ValidationException;
 import com.wisecoin.LlamaPay_Api.repositories.ClientRepository;
 import com.wisecoin.LlamaPay_Api.repositories.UserRepository;
 import com.wisecoin.LlamaPay_Api.services.ClientService;
+import com.wisecoin.LlamaPay_Api.services.SettingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,9 @@ public class ClientServiceImpl implements ClientService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    SettingService settingService;
 
     private boolean isValidPassword(String password) {
         String regex = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*(),.?\":{}|<>]).{8,}$";
@@ -48,7 +53,6 @@ public class ClientServiceImpl implements ClientService {
         if(clientRepository.existsByEmail(clientDto.getEmail())){
             throw new ValidationException("El email ya se encuentra registrado");
         }
-
 
         //Validando phone
         if(clientRepository.existsByPhoneNumber(clientDto.getPhoneNumber())){
@@ -89,12 +93,14 @@ public class ClientServiceImpl implements ClientService {
 
         Client client = new Client(clientDto.getId(), clientDto.getFirstName(),
                 clientDto.getLastName(), clientDto.getEmail(), clientDto.getPhoneNumber(), clientDto.getBirthdate(),
-                clientDto.getGender(),has_premiun);
+                clientDto.getGender(),"link de foto de perfil",has_premiun);
 
-        clientRepository.save(client);
+        client= clientRepository.save(client);
 
         User user = new User(0L,clientDto.getUsername(), clientDto.getPassword(),enabled,
                 getClientById(clientRepository.getIdByEmail(clientDto.getEmail())));
+
+        settingService.addSetting(client.getId());
 
         //Se cre el user
         userRepository.save(user);
@@ -188,6 +194,14 @@ public class ClientServiceImpl implements ClientService {
                 }
                 clientFound.setGender(clientRequestDTO.getGender());
             }
+
+            if(!clientRequestDTO.getProfilePicture().isBlank()){
+                if (clientRequestDTO.getProfilePicture().length() < 3) {
+                    throw new ValidationException("La foto de perfil no es válida");
+                }
+                clientFound.setGender(clientRequestDTO.getGender());
+            }
+
             return clientRepository.save(clientFound);
         }
 
@@ -207,7 +221,7 @@ public class ClientServiceImpl implements ClientService {
         ClientResponseDTO clientResponseDto = new ClientResponseDTO(
                 client.getId(), client.getFirstName(), client.getLastName(),
                 client.getEmail(), client.getPhoneNumber(), client.getBirthdate(),
-                client.getGender()
+                client.getGender(), client.getProfilePicture()
         );
         return clientResponseDto;
     }

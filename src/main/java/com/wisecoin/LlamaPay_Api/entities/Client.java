@@ -36,6 +36,9 @@ public class Client {
     @Column(name = "gender", nullable = false, length = 1)
     private String gender;
 
+    @Column(name = "profile_picture", length = 250)
+    private String profilePicture;
+
     @Column(name = "has_premiun")
     private Boolean hasPremiun;
 }
