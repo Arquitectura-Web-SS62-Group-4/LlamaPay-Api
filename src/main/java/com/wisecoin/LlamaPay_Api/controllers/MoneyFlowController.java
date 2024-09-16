@@ -20,6 +20,12 @@ public class MoneyFlowController {
     @Autowired
     MoneyFlowService moneyFlowService;
 
+    @GetMapping("/moneyFlows/NetAmount/{month}")
+    public ResponseEntity<MoneyFlowSummaryDTO> getMoneyFlowAmountByMonth(@PathVariable("month") int month){
+        return new ResponseEntity<MoneyFlowSummaryDTO>(moneyFlowService.getMoneyFlowNetoByMonth(month),
+                HttpStatus.OK);
+    }
+
     @GetMapping("/moneyFlows/Expenses/month/{month}")
     public ResponseEntity<List<MoneyFlowResponseDTO>> getMoneyFlowExpensesByMonth(@PathVariable("month") int month){
         return new ResponseEntity<List<MoneyFlowResponseDTO>>(moneyFlowService.getMoneyFlowByTypeAndMonth("Gasto",month),

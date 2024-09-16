@@ -27,4 +27,9 @@ public interface MoneyFlowRepository extends JpaRepository<MoneyFlow,Long> {
     public List<MoneyFlow> getListByRange(@Param("firstMonth") int firstMonth,
                                           @Param("finalMonth") int finalMonth);
 
+    //
+    @Query(nativeQuery = true, value = "" +
+            "SELECT * FROM money_flows m " +
+            "WHERE EXTRACT(MONTH FROM m.date) = :month")
+    public List<MoneyFlow> getListByMonth(@Param("month") int month);
 }

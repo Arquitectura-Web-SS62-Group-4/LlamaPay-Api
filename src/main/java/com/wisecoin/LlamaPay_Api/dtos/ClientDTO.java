@@ -44,6 +44,8 @@ public class ClientDTO {
     @Size(max = 1, message = "El genero debe tener un solo carácter")
     private String gender;
 
+    private String profilePicture;
+
     @NotBlank(message = "El nombre de usuario no puede estar en blanco")
     @NotNull(message = "El nombre de usuario no puede ser nulo")
     private String username;
