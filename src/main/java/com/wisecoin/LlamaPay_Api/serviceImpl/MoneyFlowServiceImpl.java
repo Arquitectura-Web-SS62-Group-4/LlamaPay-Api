@@ -207,6 +207,33 @@ public class MoneyFlowServiceImpl implements MoneyFlowService {
         return monetFlowSummaryDTOS;
     }
 
+    //
+    @Override
+    public MoneyFlowSummaryDTO getMoneyFlowNetoByMonth(int month) {
+        if(month < 1 || month > 12){
+            throw new ValidationException("El mes ingresa no es correcto");
+        }
+        List<MoneyFlow> moneyFlows = moneyFlowRepository.getListByMonth(month);
+
+        Double totalIngresos = 0.0;
+        Double totalGastos = 0.0;
+        String nameMonth = "";
+        for (MoneyFlow flow : moneyFlows) {
+            if (flow.getCategory().getType().equals("Ingreso")) {
+                totalIngresos += flow.getAmount();
+            } else if (flow.getCategory().getType().equals("Gasto")) {
+                totalGastos += flow.getAmount();
+            }
+            nameMonth = flow.getDate().getMonth().name();
+        }
+
+        double montoNeto = totalIngresos - totalGastos;
+
+
+        MoneyFlowSummaryDTO moneyFlowSummaryDTO =new  MoneyFlowSummaryDTO(nameMonth, montoNeto);
+        return moneyFlowSummaryDTO;
+    }
+
     @Override
     public List<MoneyFlow> findByClient(Long clientId) {
         Client client = clientRepository.findById(clientId).orElse(null);

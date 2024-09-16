@@ -18,4 +18,7 @@ public interface MoneyFlowService {
 
     public List<MoneyFlowResponseDTO> getMoneyFlowByTypeAndMonth(String type, int month);
     public List<MoneyFlowSummaryDTO> getMoneyFlowNeto(int firstMonth, int finalMonth);
+
+    //
+    public MoneyFlowSummaryDTO getMoneyFlowNetoByMonth(int month);
 }
