@@ -18,6 +18,9 @@ public class MoneyFlow {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "name", nullable = false, length = 100)
+    private String name;
+
     @Column(name = "type", nullable = false, length = 7)
     private String type; // "Ingreso" o "Gasto"
 
@@ -26,9 +29,6 @@ public class MoneyFlow {
 
     @Column(name = "date", nullable = false)
     private LocalDate date;
-
-    @Column(name = "name", nullable = false, length = 100)
-    private String name;
 
     @JsonIgnore
     @ManyToOne

@@ -24,4 +24,6 @@ public class ClientResponseDTO {
     private LocalDate birthdate;
 
     private String gender;
+
+    private String profilePicture;
 }

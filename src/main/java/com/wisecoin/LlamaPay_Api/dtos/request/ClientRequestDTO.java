@@ -33,4 +33,6 @@ public class ClientRequestDTO {
 
     @Size(max = 1, message = "El genero debe tener un solo carácter")
     private String gender;
+
+    private String profilePicture;
 }

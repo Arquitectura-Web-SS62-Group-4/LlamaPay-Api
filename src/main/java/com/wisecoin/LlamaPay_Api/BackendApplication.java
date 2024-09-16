@@ -25,27 +25,22 @@ public class BackendApplication {
 
 				// Categorías de tipo "Gasto"
 				categoryRepository.save(new Category(0L, "Vivienda", "Gasto"));
-				categoryRepository.save(new Category(0L, "Servicios Públicos", "Gasto"));
-				categoryRepository.save(new Category(0L, "Ropa", "Gasto"));
-				categoryRepository.save(new Category(0L, "Internet", "Gasto"));
-				categoryRepository.save(new Category(0L, "Teléfono", "Gasto"));
-				categoryRepository.save(new Category(0L, "Mascotas", "Gasto"));
-				categoryRepository.save(new Category(0L, "Aseo Personal", "Gasto"));
-				categoryRepository.save(new Category(0L, "Seguros", "Gasto"));
-				categoryRepository.save(new Category(0L, "Hogar", "Gasto"));
-				categoryRepository.save(new Category(0L, "Impuestos", "Gasto"));
+				categoryRepository.save(new Category(0L, "Servicios", "Gasto"));
+				categoryRepository.save(new Category(0L, "Transporte", "Gasto"));
+				categoryRepository.save(new Category(0L, "Alimentación", "Gasto"));
+				categoryRepository.save(new Category(0L, "Salud y Cuidado Personal", "Gasto"));
+				categoryRepository.save(new Category(0L, "Entretenimiento", "Gasto"));
+				categoryRepository.save(new Category(0L, "Impuestos y Seguros", "Gasto"));
+				categoryRepository.save(new Category(0L, "Otros Gastos", "Gasto"));
 
 				// Categorías de tipo "Ingreso"
-				categoryRepository.save(new Category(0L, "Freelance", "Ingreso"));
-				categoryRepository.save(new Category(0L, "Bonificación", "Ingreso"));
-				categoryRepository.save(new Category(0L, "Dividendos", "Ingreso"));
-				categoryRepository.save(new Category(0L, "Premios", "Ingreso"));
-				categoryRepository.save(new Category(0L, "Devolución", "Ingreso"));
-				categoryRepository.save(new Category(0L, "Rentas", "Ingreso"));
-				categoryRepository.save(new Category(0L, "Ahorros", "Ingreso"));
-				categoryRepository.save(new Category(0L, "Intereses Bancarios", "Ingreso"));
-				categoryRepository.save(new Category(0L, "Venta de Activos", "Ingreso"));
-				categoryRepository.save(new Category(0L, "Consultoría", "Ingreso"));
+				categoryRepository.save(new Category(0L, "Salario y Bonificaciones", "Ingreso"));
+				categoryRepository.save(new Category(0L, "Ventas de Artículos", "Ingreso"));
+				categoryRepository.save(new Category(0L, "Dividendos e Inversiones", "Ingreso"));
+				categoryRepository.save(new Category(0L, "Rentas e Ingresos de Propiedades", "Ingreso"));
+				categoryRepository.save(new Category(0L, "Premios y Devoluciones", "Ingreso"));
+				categoryRepository.save(new Category(0L, "Ahorros e Intereses Bancarios", "Ingreso"));
+				categoryRepository.save(new Category(0L, "Otros Ingresos", "Ingreso"));
 			}
 
 		};

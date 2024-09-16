@@ -71,8 +71,8 @@ public class MoneyFlowServiceImpl implements MoneyFlowService {
             throw new ValidationException("La categoría asignada no va acorde con el tipo.");
         }
 
-        MoneyFlow moneyFlow = new MoneyFlow(moneyFlowDto.getId(),moneyFlowDto.getType(),moneyFlowDto.getAmount(),
-                moneyFlowDto.getDate(), moneyFlowDto.getName(), client, category);
+        MoneyFlow moneyFlow = new MoneyFlow(moneyFlowDto.getId(),moneyFlowDto.getName(),moneyFlowDto.getType(),moneyFlowDto.getAmount(),
+                moneyFlowDto.getDate(), client, category);
 
         moneyFlow.setClient(client);
         moneyFlow.setCategory(category);
