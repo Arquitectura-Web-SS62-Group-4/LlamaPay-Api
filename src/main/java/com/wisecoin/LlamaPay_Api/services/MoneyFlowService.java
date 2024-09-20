@@ -16,9 +16,8 @@ public interface MoneyFlowService {
     public MoneyFlow getMoneyFlowById(Long id);
     public MoneyFlow updateMoneyFlow(Long id, Long categoryId,MoneyFlowRequestDTO moneyFlowRequestDto);
 
-    public List<MoneyFlowResponseDTO> getMoneyFlowByTypeAndMonth(String type, int month);
-    public List<MoneyFlowSummaryDTO> getMoneyFlowNeto(int firstMonth, int finalMonth);
+    public List<MoneyFlowResponseDTO> getMoneyFlowByTypeAndMonth(String type, int year, int month);
+    public List<MoneyFlowSummaryDTO> getMoneyFlowNeto(int year, int firstMonth, int finalMonth);
 
-    //
-    public MoneyFlowSummaryDTO getMoneyFlowNetoByMonth(int month);
+    public MoneyFlowSummaryDTO getMoneyFlowNetoByMonth(int year, int month);
 }

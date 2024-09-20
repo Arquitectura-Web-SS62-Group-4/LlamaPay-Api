@@ -18,10 +18,4 @@ public class DailyBitRequestDTO {
 
     @NotNull(message = "El contenido no puede ser nulo")
     private String content;
-
-    @NotNull(message = "La fecha no puede ser nulo")
-    private LocalDate date;
-
-    @NotNull(message = "El tipo no puede ser nulo")
-    private TypeBit typeBit;
 }

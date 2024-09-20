@@ -1,7 +1,7 @@
 package com.wisecoin.LlamaPay_Api.controllers;
 
-import com.wisecoin.LlamaPay_Api.dtos.response.TypeBitResponseDTO;
-import com.wisecoin.LlamaPay_Api.services.TypeBitService;
+import com.wisecoin.LlamaPay_Api.entities.Premiun;
+import com.wisecoin.LlamaPay_Api.services.PremiunService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,15 +11,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RequestMapping("/api")
 @RestController
-public class TypeBitController {
-    @Autowired
-    TypeBitService typeBitService;
+@RequestMapping("/api")
+public class PremiunController{
 
-    @GetMapping("/typeBits")
-    public ResponseEntity<List<TypeBitResponseDTO>> listAllTypesBits(){
-        return new ResponseEntity<List<TypeBitResponseDTO>>(typeBitService.listAll(),
+    @Autowired
+    PremiunService premiunService;
+
+    @GetMapping("/premiuns")
+    public ResponseEntity<List<Premiun>> findAll(){
+        return new ResponseEntity<List<Premiun>>(premiunService.findALl(),
                 HttpStatus.OK);
     }
 }

@@ -4,7 +4,6 @@ import com.wisecoin.LlamaPay_Api.dtos.ClientDTO;
 import com.wisecoin.LlamaPay_Api.dtos.request.ClientRequestDTO;
 import com.wisecoin.LlamaPay_Api.dtos.response.ClientResponseDTO;
 import com.wisecoin.LlamaPay_Api.entities.Client;
-import com.wisecoin.LlamaPay_Api.entities.Setting;
 import com.wisecoin.LlamaPay_Api.entities.User;
 import com.wisecoin.LlamaPay_Api.exceptions.ResourceNotFoundException;
 import com.wisecoin.LlamaPay_Api.exceptions.ValidationException;

@@ -1,7 +1,12 @@
 package com.wisecoin.LlamaPay_Api;
 
 import com.wisecoin.LlamaPay_Api.entities.Category;
+import com.wisecoin.LlamaPay_Api.entities.Premiun;
+import com.wisecoin.LlamaPay_Api.entities.TypeBit;
 import com.wisecoin.LlamaPay_Api.repositories.CategoryRepository;
+import com.wisecoin.LlamaPay_Api.repositories.DailyBitRepository;
+import com.wisecoin.LlamaPay_Api.repositories.PremiunRepository;
+import com.wisecoin.LlamaPay_Api.repositories.TypeBitRepository;
 import com.wisecoin.LlamaPay_Api.services.CategoryService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -18,7 +23,10 @@ public class BackendApplication {
 
 	@Bean
 	public CommandLineRunner mappingDemo(
-			CategoryRepository categoryRepository
+			CategoryRepository categoryRepository,
+			TypeBitRepository typeBitRepository,
+			PremiunRepository premiunRepository
+
 	) {
 		return args -> {
 			if (categoryRepository.count() == 0) {
@@ -43,6 +51,17 @@ public class BackendApplication {
 				categoryRepository.save(new Category(0L, "Otros Ingresos", "Ingreso"));
 			}
 
+			if(typeBitRepository.count() == 0){
+				typeBitRepository.save(new TypeBit(0L, "Interés"));
+				typeBitRepository.save(new TypeBit(0L, "Póliza de Seguro"));
+				typeBitRepository.save(new TypeBit(0L, "Inversión"));
+				typeBitRepository.save(new TypeBit(0L, "Ahorro"));
+				typeBitRepository.save(new TypeBit(0L, "Crédito"));
+			}
+
+			if(premiunRepository.count() == 0){
+				premiunRepository.save(new Premiun(0L,15.0));
+			}
 		};
 	}
 

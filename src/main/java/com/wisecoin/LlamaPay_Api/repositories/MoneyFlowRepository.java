@@ -17,19 +17,20 @@ public interface MoneyFlowRepository extends JpaRepository<MoneyFlow,Long> {
     @Query(nativeQuery = true, value = "" +
             "SELECT * FROM money_flows m " +
             "WHERE m.type = :type " +
-            "AND EXTRACT(MONTH FROM m.date) = :month ")
-    public List<MoneyFlow> getListByTypeAndMonth(@Param("type") String type,
-                                                    @Param("month") int month);
+            "AND EXTRACT(MONTH FROM m.date) = :month " +
+            "AND EXTRACT(YEAR FROM m.date) = :year")
+    public List<MoneyFlow> getListByTypeAndMonth(@Param("type") String type, @Param("month") int month, @Param("year") int year);
 
     @Query(nativeQuery = true, value = "" +
             "SELECT * FROM money_flows m " +
-            "WHERE EXTRACT(MONTH FROM m.date) BETWEEN :firstMonth AND :finalMonth")
+            "WHERE EXTRACT(MONTH FROM m.date) BETWEEN :firstMonth AND :finalMonth" +
+            "AND EXTRACT(YEAR FROM m.date) = :year")
     public List<MoneyFlow> getListByRange(@Param("firstMonth") int firstMonth,
-                                          @Param("finalMonth") int finalMonth);
+                                          @Param("finalMonth") int finalMonth, @Param("year") int year);
 
-    //
     @Query(nativeQuery = true, value = "" +
             "SELECT * FROM money_flows m " +
-            "WHERE EXTRACT(MONTH FROM m.date) = :month")
-    public List<MoneyFlow> getListByMonth(@Param("month") int month);
+            "WHERE EXTRACT(MONTH FROM m.date) = :month" +
+            "AND EXTRACT(YEAR FROM m.date) = :year")
+    public List<MoneyFlow> getListByMonth(@Param("month") int month, @Param("year") int year);
 }

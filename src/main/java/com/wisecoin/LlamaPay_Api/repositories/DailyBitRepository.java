@@ -8,6 +8,5 @@ import java.util.List;
 
 public interface DailyBitRepository extends JpaRepository<DailyBit,Long> {
     public List<DailyBit> findByClient(Client client);
-    public List<DailyBit> findByTypeId(String type_id);
     public boolean existsByTitle(String title);
 }

@@ -137,7 +137,7 @@ public class MoneyFlowServiceImpl implements MoneyFlowService {
     }
 
     @Override
-    public List<MoneyFlowResponseDTO> getMoneyFlowByTypeAndMonth(String type, int month) {
+    public List<MoneyFlowResponseDTO> getMoneyFlowByTypeAndMonth(String type, int year, int month) {
         if(!("Ingreso".equals(type) || "Gasto".equals(type))){
             throw new ValidationException("Tipo inválido. Debe ser 'Ingreso' o 'Gasto'.");
         }
@@ -145,7 +145,12 @@ public class MoneyFlowServiceImpl implements MoneyFlowService {
         if(month < 0 || month > 12){
             throw new ValidationException("El mes ingresado es incorrecto");
         }
-        List<MoneyFlow> moneyFlows = moneyFlowRepository.getListByTypeAndMonth(type, month);
+
+        if(year < 0){
+            throw new ValidationException("El año ingresado no es valido");
+        }
+
+        List<MoneyFlow> moneyFlows = moneyFlowRepository.getListByTypeAndMonth(type,month,year);
         List<MoneyFlowResponseDTO> moneyFlowDTOS = new ArrayList<>();
 
         for (MoneyFlow moneyFlow : moneyFlows) {
@@ -170,7 +175,7 @@ public class MoneyFlowServiceImpl implements MoneyFlowService {
     }
 
     @Override
-    public List<MoneyFlowSummaryDTO> getMoneyFlowNeto(int firstMonth, int finalMonth) {
+    public List<MoneyFlowSummaryDTO> getMoneyFlowNeto(int year, int firstMonth, int finalMonth) {
         if(firstMonth < 0 || finalMonth < 0){
             throw new ValidationException("Los meses ingresados son invalidos");
         }
@@ -178,7 +183,11 @@ public class MoneyFlowServiceImpl implements MoneyFlowService {
             throw new ValidationException("El primer debe ser menor al ultimo mes");
         }
 
-        List<MoneyFlow> moneyFlows = moneyFlowRepository.getListByRange(firstMonth, finalMonth);
+        if(year < 0){
+            throw new ValidationException("El año ingresado no es valido");
+        }
+
+        List<MoneyFlow> moneyFlows = moneyFlowRepository.getListByRange(firstMonth,finalMonth,year);
         List<MoneyFlowSummaryDTO> monetFlowSummaryDTOS = new ArrayList<>();
 
         for (int month = firstMonth; month <= finalMonth; month++) {
@@ -209,11 +218,11 @@ public class MoneyFlowServiceImpl implements MoneyFlowService {
 
     //
     @Override
-    public MoneyFlowSummaryDTO getMoneyFlowNetoByMonth(int month) {
+    public MoneyFlowSummaryDTO getMoneyFlowNetoByMonth(int year, int month) {
         if(month < 1 || month > 12){
             throw new ValidationException("El mes ingresa no es correcto");
         }
-        List<MoneyFlow> moneyFlows = moneyFlowRepository.getListByMonth(month);
+        List<MoneyFlow> moneyFlows = moneyFlowRepository.getListByMonth(month,year);
 
         Double totalIngresos = 0.0;
         Double totalGastos = 0.0;
