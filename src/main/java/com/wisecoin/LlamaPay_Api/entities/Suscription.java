@@ -12,28 +12,24 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="dailyBits")
-public class DailyBit {
+@Table(name = "suscriptions")
+public class Suscription {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
 
-    @Column(name = "title", nullable = false, length = 40)
-    private String title;
+    @Column(name = "start_time", nullable = false)
+    private LocalDate startTime;
 
-    @Column(name = "content", nullable = false, length = 200)
-    private String content;
-
-    @Column(name = "date", nullable = false)
-    private LocalDate date;
-
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "typeBit_id", nullable = false)
-    private TypeBit typeBit;
+    @Column(name = "end_time", nullable = false)
+    private LocalDate endTime;
 
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "client_id", nullable = false)
     private Client client;
+
+    @ManyToOne
+    @JoinColumn(name = "premiun_id", nullable = false)
+    private Premiun premiun;
 }

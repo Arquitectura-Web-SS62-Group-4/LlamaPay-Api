@@ -20,27 +20,27 @@ public class MoneyFlowController {
     @Autowired
     MoneyFlowService moneyFlowService;
 
-    @GetMapping("/moneyFlows/NetAmount/{month}")
-    public ResponseEntity<MoneyFlowSummaryDTO> getMoneyFlowAmountByMonth(@PathVariable("month") int month){
-        return new ResponseEntity<MoneyFlowSummaryDTO>(moneyFlowService.getMoneyFlowNetoByMonth(month),
+    @GetMapping("/moneyFlows/NetAmount/year/{year}/month/{month}")
+    public ResponseEntity<MoneyFlowSummaryDTO> getMoneyFlowAmountByMonth(@PathVariable("year") int year, @PathVariable("month") int month){
+        return new ResponseEntity<MoneyFlowSummaryDTO>(moneyFlowService.getMoneyFlowNetoByMonth(year,month),
                 HttpStatus.OK);
     }
 
-    @GetMapping("/moneyFlows/Expenses/month/{month}")
-    public ResponseEntity<List<MoneyFlowResponseDTO>> getMoneyFlowExpensesByMonth(@PathVariable("month") int month){
-        return new ResponseEntity<List<MoneyFlowResponseDTO>>(moneyFlowService.getMoneyFlowByTypeAndMonth("Gasto",month),
+    @GetMapping("/moneyFlows/Expenses/year/{year}/month/{month}")
+    public ResponseEntity<List<MoneyFlowResponseDTO>> getMoneyFlowExpensesByMonth(@PathVariable("year") int year, @PathVariable("month") int month){
+        return new ResponseEntity<List<MoneyFlowResponseDTO>>(moneyFlowService.getMoneyFlowByTypeAndMonth("Gasto",year,month),
                 HttpStatus.OK);
     }
 
-    @GetMapping("/moneyFlows/Incomes/month/{month}")
-    public ResponseEntity<List<MoneyFlowResponseDTO>> getMoneyFlowIncomesByMonth(@PathVariable("month") int month){
-        return new ResponseEntity<List<MoneyFlowResponseDTO>>(moneyFlowService.getMoneyFlowByTypeAndMonth("Ingreso",month),
+    @GetMapping("/moneyFlows/Incomes/year/{year}/month/{month}")
+    public ResponseEntity<List<MoneyFlowResponseDTO>> getMoneyFlowIncomesByMonth(@PathVariable("year") int year, @PathVariable("month") int month){
+        return new ResponseEntity<List<MoneyFlowResponseDTO>>(moneyFlowService.getMoneyFlowByTypeAndMonth("Ingreso",year, month),
                 HttpStatus.OK);
     }
 
-    @GetMapping("/moneyFlows/summary/firstMonth/{firstMonth}/finalMonth/{finalMonth}")
-    public ResponseEntity<List<MoneyFlowSummaryDTO>> getSummary(@PathVariable("firstMonth") int firstMonth, @PathVariable("finalMonth") int finalMonth){
-        return new ResponseEntity<List<MoneyFlowSummaryDTO>>(moneyFlowService.getMoneyFlowNeto(firstMonth,finalMonth),
+    @GetMapping("/moneyFlows/summary/year/{year}/firstMonth/{firstMonth}/finalMonth/{finalMonth}")
+    public ResponseEntity<List<MoneyFlowSummaryDTO>> getSummary(@PathVariable("year") int year, @PathVariable("firstMonth") int firstMonth, @PathVariable("finalMonth") int finalMonth){
+        return new ResponseEntity<List<MoneyFlowSummaryDTO>>(moneyFlowService.getMoneyFlowNeto(year,firstMonth,finalMonth),
                 HttpStatus.OK);
     }
 

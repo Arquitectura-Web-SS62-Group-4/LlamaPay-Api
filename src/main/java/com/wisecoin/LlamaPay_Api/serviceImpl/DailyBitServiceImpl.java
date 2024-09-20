@@ -10,10 +10,12 @@ import com.wisecoin.LlamaPay_Api.repositories.DailyBitRepository;
 import com.wisecoin.LlamaPay_Api.services.DailyBitService;
 import com.wisecoin.LlamaPay_Api.services.TypeBitService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 
+@Service
 public class DailyBitServiceImpl implements DailyBitService {
 
     @Autowired
@@ -28,27 +30,34 @@ public class DailyBitServiceImpl implements DailyBitService {
     @Override
     public DailyBit addDailyBit(Long client_id, Long typebit_id, DailyBitDTO dailyBitDTO) {
         Client client = clientRepository.findById(client_id).orElse(null);
+
         if (client==null) {
             throw new ResourceNotFoundException("Cliente no encontrado");
         }
+
         LocalDate today = LocalDate.now();
+        List<DailyBit> dailyBits =  dailyBitRepository.findByClient(client);
+        for(DailyBit dailyBit: dailyBits){
+            if(dailyBit.getDate().isEqual(today)){
+                throw new ResourceNotFoundException("El cliente ya recibio su bit diario");
+            }
+        }
 
         if(dailyBitDTO.getTitle().length()>40){
             throw new ValidationException("El titulo no puede tener más de 40 caracteres");
+        }
+        if(dailyBitRepository.existsByTitle(dailyBitDTO.getTitle())){
+            throw new ValidationException("El titulo ingresado ya se encuentra registrado");
         }
 
         if(dailyBitDTO.getContent().length()>200){
             throw new ValidationException("El contenido no puede tener más de 200 caracteres");
         }
 
-        if(dailyBitDTO.getDate().isBefore(today)){
-            throw new ValidationException("La fecha no puede ser anterior a la actual");
-        }
-
         TypeBit typeBit=typeBitService.getTypeBitById(typebit_id);
 
         DailyBit dailyBit=new DailyBit(dailyBitDTO.getId(), dailyBitDTO.getTitle(), dailyBitDTO.getContent(),
-                dailyBitDTO.getDate(),typeBit,client);
+                today,typeBit,client);
 
         return dailyBitRepository.save(dailyBit);
 
@@ -89,6 +98,16 @@ public class DailyBitServiceImpl implements DailyBitService {
         if(DailyBitfound!=null){
             LocalDate today = LocalDate.now();
 
+            if(!dailyBitRequestDTO.getTitle().isBlank()){
+                if(dailyBitRequestDTO.getTitle().length()>40){
+                    throw new ValidationException("El titulo no puede tener más de 40 caracteres");
+                }
+                if(dailyBitRepository.existsByTitle(dailyBitRequestDTO.getTitle())){
+                    throw new ValidationException("El titulo ingresado ya se encuentra registrado");
+                }
+                DailyBitfound.setTitle(dailyBitRequestDTO.getTitle());
+            }
+
             if(dailyBitRequestDTO.getContent()!=null){
                 if(dailyBitRequestDTO.getContent().length()>200){
                     throw new ValidationException("El contenido no puede tener más de 200 caracteres");
@@ -96,26 +115,9 @@ public class DailyBitServiceImpl implements DailyBitService {
                 DailyBitfound.setContent(dailyBitRequestDTO.getContent());
             }
 
-            if(dailyBitRequestDTO.getDate()!=null){
-                if(dailyBitRequestDTO.getDate().isBefore(today)){
-                    throw new ValidationException("La fecha no puede ser anterior a la actual");
-                }
-                DailyBitfound.setDate(dailyBitRequestDTO.getDate());
-            }
-
-            if(!dailyBitRequestDTO.getTitle().isBlank()){
-                if(dailyBitRequestDTO.getTitle().length()>40){
-                    throw new ValidationException("El titulo no puede tener más de 40 caracteres");
-                }
-                DailyBitfound.setTitle(dailyBitRequestDTO.getTitle());
-            }
-
             return dailyBitRepository.save(DailyBitfound);
         }
 
-        if(!dailyBitRepository.existsById(id)){
-            throw new ResourceNotFoundException("DailyBit no encontrado");
-        }
         return null;
     }
 }

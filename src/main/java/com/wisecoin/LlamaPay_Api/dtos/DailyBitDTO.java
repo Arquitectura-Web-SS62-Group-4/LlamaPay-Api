@@ -17,6 +17,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DailyBitDTO {
+
     private Long Id;
 
     @NotNull(message = "El titulo no puede ser nulo")
@@ -26,13 +27,4 @@ public class DailyBitDTO {
     @NotNull(message = "El contenido no puede ser nulo")
     @NotBlank(message = "El contenido no puede estar en blanco")
     private String content;
-
-    @NotNull(message = "La fecha no puede ser nulo")
-    @NotBlank(message = "La fecha no puede estar en blanco")
-    private LocalDate date;
-
-    @NotNull(message = "El tipo no puede ser nulo")
-    @NotBlank(message = "El tipo no puede estar en blanco")
-    private TypeBit typeBit;
-
 }
