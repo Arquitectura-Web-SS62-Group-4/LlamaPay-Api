@@ -5,12 +5,13 @@ import com.wisecoin.LlamaPay_Api.dtos.request.ClientRequestDTO;
 import com.wisecoin.LlamaPay_Api.dtos.response.ClientResponseDTO;
 import com.wisecoin.LlamaPay_Api.entities.Client;
 import com.wisecoin.LlamaPay_Api.entities.User;
+import com.wisecoin.LlamaPay_Api.exceptions.InvalidActionException;
 import com.wisecoin.LlamaPay_Api.exceptions.ResourceNotFoundException;
 import com.wisecoin.LlamaPay_Api.exceptions.ValidationException;
 import com.wisecoin.LlamaPay_Api.repositories.ClientRepository;
-import com.wisecoin.LlamaPay_Api.repositories.UserRepository;
 import com.wisecoin.LlamaPay_Api.services.ClientService;
 import com.wisecoin.LlamaPay_Api.services.SettingService;
+import com.wisecoin.LlamaPay_Api.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,18 +25,16 @@ public class ClientServiceImpl implements ClientService {
     ClientRepository clientRepository;
 
     @Autowired
-    UserRepository userRepository;
-
-    @Autowired
     SettingService settingService;
 
-    private boolean isValidPassword(String password) {
-        String regex = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*(),.?\":{}|<>]).{8,}$";
-        return password != null && password.matches(regex);
-    }
+    @Autowired
+    UserService userService;
 
     @Override
-    public Client addClient(ClientDTO clientDto) {
+    public Client addClient(ClientDTO clientDto, Long idUser) {
+
+        User user = userService.findById(idUser);
+
         LocalDate today = LocalDate.now();
 
         //Validando firstName
@@ -73,36 +72,17 @@ public class ClientServiceImpl implements ClientService {
             throw new ValidationException("El género del cliente es inválido. Debe ser 'M' o 'F'");
         }
 
-        //Validando username
-        if(userRepository.existsByUsername(clientDto.getUsername())){
-            throw new ValidationException("El nombre de usuario ya se encuentra registrado");
-        }
-        if(clientDto.getUsername().length()<=2){
-            throw new ValidationException("El nombre de usuario no puede tener menos de tres caracteres");
-        }
-
-        //Validando password
-        if(!isValidPassword(clientDto.getPassword())){
-            throw new ValidationException("La contraseña no cumple con los requisitos");
-        }
-
         //Se crea en false
         boolean has_premiun = false;
-        boolean enabled = true;
 
         Client client = new Client(clientDto.getId(), clientDto.getFirstName(),
                 clientDto.getLastName(), clientDto.getEmail(), clientDto.getPhoneNumber(), clientDto.getBirthdate(),
-                clientDto.getGender(),"link de foto de perfil",has_premiun);
+                clientDto.getGender(),"link de foto de perfil",has_premiun,user);
 
         client= clientRepository.save(client);
 
-        User user = new User(0L,clientDto.getUsername(), clientDto.getPassword(),enabled,
-                getClientById(clientRepository.getIdByEmail(clientDto.getEmail())));
-
         settingService.addSetting(client.getId());
 
-        //Se cre el user
-        userRepository.save(user);
         return client;
     }
 
@@ -114,15 +94,8 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public void deleteClient(Long id) {
         Client client = getClientById(id);
-        if (client !=null) {
-            /*
-            if (client.().isEmpty()) {
-                brandRepository.delete(client);
-            } else {
-                throw new InvalidActionException("Brand with id: "+ id +" can not be deleted because it has FK dependencies");
-            }
-
-             */
+        if(client !=null){
+            throw new InvalidActionException("No se puede realizar esta acción!");
         }
     }
 

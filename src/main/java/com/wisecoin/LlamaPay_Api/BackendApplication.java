@@ -1,12 +1,11 @@
 package com.wisecoin.LlamaPay_Api;
 
+import com.wisecoin.LlamaPay_Api.entities.Authority;
 import com.wisecoin.LlamaPay_Api.entities.Category;
 import com.wisecoin.LlamaPay_Api.entities.Premiun;
 import com.wisecoin.LlamaPay_Api.entities.TypeBit;
-import com.wisecoin.LlamaPay_Api.repositories.CategoryRepository;
-import com.wisecoin.LlamaPay_Api.repositories.DailyBitRepository;
-import com.wisecoin.LlamaPay_Api.repositories.PremiunRepository;
-import com.wisecoin.LlamaPay_Api.repositories.TypeBitRepository;
+import com.wisecoin.LlamaPay_Api.repositories.*;
+import com.wisecoin.LlamaPay_Api.services.AuthorityService;
 import com.wisecoin.LlamaPay_Api.services.CategoryService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -25,10 +24,18 @@ public class BackendApplication {
 	public CommandLineRunner mappingDemo(
 			CategoryRepository categoryRepository,
 			TypeBitRepository typeBitRepository,
-			PremiunRepository premiunRepository
+			PremiunRepository premiunRepository,
+			AuthorityRepository authorityRepository,
+			AuthorityService authorityService
 
 	) {
 		return args -> {
+			if (authorityRepository.count() == 0) {
+				authorityService.addAuthority(new Authority(0L,"ADMIN",null));
+				authorityService.addAuthority(new Authority(0L,"CLIENTE",null));
+			}
+
+
 			if (categoryRepository.count() == 0) {
 
 				// Categorías de tipo "Gasto"

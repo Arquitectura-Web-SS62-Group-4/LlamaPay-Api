@@ -25,13 +25,13 @@ public class GoalController {
                 HttpStatus.OK);
     }
 
-    @GetMapping("/goals/user/{id}")
+    @GetMapping("/goals/client/{id}")
     public ResponseEntity<List<Goal>> listGoalByClient( @PathVariable("id") Long id){
         return new ResponseEntity<List<Goal>>( goalService.findByClient(id),
                 HttpStatus.OK);
     }
 
-    @PostMapping("/goals/{id}")
+    @PostMapping("/goals/client/{id}")
     public ResponseEntity<Goal> addGoal(@PathVariable("id") Long id, @Valid @RequestBody GoalDTO goalDto){
         Goal goalCreated = goalService.addGoal(id, goalDto);
         return new ResponseEntity<Goal>(goalCreated,

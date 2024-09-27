@@ -24,20 +24,20 @@ public class CardController {
                 HttpStatus.OK);
     }
 
-    @GetMapping("/cards/user/{id}")
+    @GetMapping("/cards/client/{id}")
     public ResponseEntity<Card> listCardByClient( @PathVariable("id") Long id){
         return new ResponseEntity<Card>(cardService.findByClient(id),
                 HttpStatus.OK);
     }
 
-    @PostMapping("/cards/{id}")
+    @PostMapping("/cards/client/{id}")
     public ResponseEntity<Card> addCard(@PathVariable("id") Long id, @Valid @RequestBody CardDTO cardDto){
         Card carCreated = cardService.addCard(id, cardDto);
         return new ResponseEntity<Card>(carCreated,
                 HttpStatus.OK);
     }
 
-    @PutMapping("/cards/{id}")
+    @PutMapping("/cards/client/{id}")
     public ResponseEntity<Card> updateCard(@PathVariable("id") Long id, @Valid @RequestBody CardRequestDTO cardRequestDto){
         Card cardUpdate = cardService.updateCard(id,cardRequestDto);
         if (cardUpdate!=null) {

@@ -28,13 +28,13 @@ public class DailyBitController {
                 HttpStatus.OK);
     }
 
-    @GetMapping("/dailyBits/user/{id}")
+    @GetMapping("/dailyBits/client/{id}")
     public ResponseEntity<List<DailyBit>> listDailyBitByClient( @PathVariable("id") Long id){
         return new ResponseEntity<List<DailyBit>>(dailyBitService.findByClient(id),
                 HttpStatus.OK);
     }
 
-    @PostMapping("/dailyBits/user/{id}/typeBit/{typeBitId}")
+    @PostMapping("/dailyBits/client/{id}/typeBit/{typeBitId}")
     public ResponseEntity<DailyBit> addDailyBit(@PathVariable("id") Long id, @PathVariable("typeBitId") Long typeBitId,
                                                   @Valid @RequestBody DailyBitDTO dailyBitDTO){
         DailyBit DailyBitCreated = dailyBitService.addDailyBit(id, typeBitId, dailyBitDTO);
@@ -48,7 +48,7 @@ public class DailyBitController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping("/dailyBits/user/{id}/typeBit/{typeBitId}")
+    @PutMapping("/dailyBits/client/{id}/typeBit/{typeBitId}")
     public ResponseEntity<DailyBit> updateDailyBit(@PathVariable("id") Long id, @PathVariable("typeBitId") Long typeBitId,
                                                 @Valid @RequestBody DailyBitRequestDTO dailyBitRequestDTO){
         DailyBit dailyBitUpdate = dailyBitService.updateDailyBit(id,typeBitId,dailyBitRequestDTO);

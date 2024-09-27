@@ -31,27 +31,11 @@ public class ClientDTO {
     @Email(message = "El email no es valido")
     private String email;
 
-    @NotBlank(message = "El numero de telefono no puede estar en blanco")
-    @NotNull(message = "El numero de telefono no puede ser nulo")
     private String phoneNumber;
 
-    //@NotBlank(message = "La fecha de nacimiento no puede estar en blanco")
-    @NotNull(message = "La fecha de nacimiento no puede ser nulo")
     private LocalDate birthdate;
 
-    @NotBlank(message = "El genero no puede estar en blanco")
-    @NotNull(message = "El genero no puede ser nulo")
-    @Size(max = 1, message = "El genero debe tener un solo carácter")
     private String gender;
 
     private String profilePicture;
-
-    @NotBlank(message = "El nombre de usuario no puede estar en blanco")
-    @NotNull(message = "El nombre de usuario no puede ser nulo")
-    private String username;
-
-    @NotBlank(message = "La contraseña no puede estar en blanco")
-    @NotNull(message = "La contraseña no puede ser nulo")
-    @Size(min = 8, message = "La contraseña debe tener al menos 8 caracteres")
-    private String password;
 }

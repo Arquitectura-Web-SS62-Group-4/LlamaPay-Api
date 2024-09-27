@@ -26,9 +26,9 @@ public class ClientController {
                 HttpStatus.OK);
     }
 
-    @PostMapping("/clients")
-    public ResponseEntity<Client> addClient(@Valid @RequestBody ClientDTO clientDto) {
-        Client clientCreate = clientService.addClient(clientDto);
+    @PostMapping("/clients/idUser/{idUser}")
+    public ResponseEntity<Client> addClient(@Valid @RequestBody ClientDTO clientDto, @PathVariable("idUser") Long idUser) {
+        Client clientCreate = clientService.addClient(clientDto,idUser);
         return new ResponseEntity<Client>(clientCreate,
                 HttpStatus.CREATED);
 

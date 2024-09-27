@@ -1,6 +1,7 @@
 package com.wisecoin.LlamaPay_Api.serviceImpl;
 
 import com.wisecoin.LlamaPay_Api.dtos.GoalDTO;
+import com.wisecoin.LlamaPay_Api.dtos.MoneyFlowDTO;
 import com.wisecoin.LlamaPay_Api.dtos.request.GoalRequestDTO;
 import com.wisecoin.LlamaPay_Api.entities.Client;
 import com.wisecoin.LlamaPay_Api.entities.Goal;
@@ -9,6 +10,7 @@ import com.wisecoin.LlamaPay_Api.exceptions.ValidationException;
 import com.wisecoin.LlamaPay_Api.repositories.ClientRepository;
 import com.wisecoin.LlamaPay_Api.repositories.GoalRepository;
 import com.wisecoin.LlamaPay_Api.services.GoalService;
+import com.wisecoin.LlamaPay_Api.services.MoneyFlowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,9 @@ import java.util.List;
 public class GoalServiceimpl implements GoalService {
     @Autowired
     GoalRepository goalRepository;
+
+    @Autowired
+    MoneyFlowService moneyFlowService;
 
     @Autowired
     ClientRepository clientRepository;
@@ -96,6 +101,20 @@ public class GoalServiceimpl implements GoalService {
         return null;
     }
 
+    public void updateStatusGoal(Long id, List<Goal> goals) {
+        for (Goal goal : goals) {
+            Double amountNet = moneyFlowService.getMoneyFlowNetoByRange(id, goal.getStartDate(), goal.getDeadline());
+            // Actualizar estado de la meta
+            if (amountNet >= goal.getAmount()) {
+                goal.setIsSuccessfull(true);
+                goalRepository.save(goal);
+            } else {
+                goal.setIsSuccessfull(false);
+                goalRepository.save(goal);
+            }
+        }
+    }
+
 
     @Override
     public Goal addGoal(Long clientId, GoalDTO goalDto) {
@@ -142,12 +161,12 @@ public class GoalServiceimpl implements GoalService {
     }
 
     @Override
-    public List<Goal> findByClient(Long ClientId){
-        Client client = clientRepository.findById(ClientId).orElse(null);
+    public List<Goal> findByClient(Long clientId){
+        Client client = clientRepository.findById(clientId).orElse(null);
         if(client==null){
             throw new ValidationException("Cliente no encontrado");
         }
-
+        updateStatusGoal(clientId, goalRepository.findByClient(client));
         return goalRepository.findByClient(client);
     }
 

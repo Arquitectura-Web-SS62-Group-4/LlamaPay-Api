@@ -8,7 +8,7 @@ import com.wisecoin.LlamaPay_Api.entities.Client;
 import java.util.List;
 
 public interface ClientService {
-    public Client addClient(ClientDTO clientDto);
+    public Client addClient(ClientDTO clientDto, Long idUser);
     public List<Client> listAll();
     public void deleteClient(Long id);
     public Client getClientById(Long id);

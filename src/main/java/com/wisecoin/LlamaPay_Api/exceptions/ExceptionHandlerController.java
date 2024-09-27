@@ -51,13 +51,17 @@ public class ExceptionHandlerController {
         );
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getFieldErrors().forEach(error ->
-                errors.put(error.getField(), error.getDefaultMessage())
+    @ExceptionHandler(InvalidActionException.class)
+    @ResponseStatus(value = HttpStatus.CONFLICT)
+    public ErrorMessage invalidActionExceptionHandler(InvalidActionException ex, WebRequest request){
+        ErrorMessage errorMessage = new ErrorMessage(
+                HttpStatus.CONFLICT.value(),
+                ex.getClass().getSimpleName(),
+                ex.getMessage(),
+                request.getDescription(false),
+                LocalDateTime.now()
         );
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+        return errorMessage;
     }
     
 }

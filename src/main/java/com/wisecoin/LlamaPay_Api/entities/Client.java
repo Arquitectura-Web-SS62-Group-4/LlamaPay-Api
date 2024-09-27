@@ -1,5 +1,6 @@
 package com.wisecoin.LlamaPay_Api.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -41,4 +42,9 @@ public class Client {
 
     @Column(name = "has_premiun")
     private Boolean hasPremiun;
+
+    @JsonIgnore
+    @OneToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 }
