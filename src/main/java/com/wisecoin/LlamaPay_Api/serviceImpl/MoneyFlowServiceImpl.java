@@ -15,6 +15,7 @@ import com.wisecoin.LlamaPay_Api.exceptions.ValidationException;
 import com.wisecoin.LlamaPay_Api.repositories.ClientRepository;
 import com.wisecoin.LlamaPay_Api.repositories.MoneyFlowRepository;
 import com.wisecoin.LlamaPay_Api.services.CategoryService;
+import com.wisecoin.LlamaPay_Api.services.ClientService;
 import com.wisecoin.LlamaPay_Api.services.MoneyFlowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,9 @@ public class MoneyFlowServiceImpl implements MoneyFlowService {
 
     @Autowired
     ClientRepository clientRepository;
+
+    @Autowired
+    ClientService clientService;
 
     @Autowired
     CategoryService categoryService;
@@ -137,7 +141,9 @@ public class MoneyFlowServiceImpl implements MoneyFlowService {
     }
 
     @Override
-    public List<MoneyFlowResponseDTO> getMoneyFlowByTypeAndMonth(String type, int year, int month) {
+    public List<MoneyFlowResponseDTO> getMoneyFlowByTypeAndMonth(Long idClient, String type, int year, int month) {
+        Client client = clientService.getClientById(idClient);
+
         if(!("Ingreso".equals(type) || "Gasto".equals(type))){
             throw new ValidationException("Tipo inválido. Debe ser 'Ingreso' o 'Gasto'.");
         }
@@ -154,28 +160,32 @@ public class MoneyFlowServiceImpl implements MoneyFlowService {
         List<MoneyFlowResponseDTO> moneyFlowDTOS = new ArrayList<>();
 
         for (MoneyFlow moneyFlow : moneyFlows) {
-            String categoryName = moneyFlow.getCategory().getNameCategory();
-            Double currentAmount = moneyFlow.getAmount();
+            if(moneyFlow.getClient().getId().equals(idClient)){
+                String categoryName = moneyFlow.getCategory().getNameCategory();
+                Double currentAmount = moneyFlow.getAmount();
 
-            boolean categoryExists = false;
-            for (MoneyFlowResponseDTO dto : moneyFlowDTOS) {
-                if (dto.getNameCategory().equals(categoryName)) {
-                    // Se suma al monto acumulado
-                    dto.setTotal(dto.getTotal() + currentAmount);
-                    categoryExists = true;
-                    break;
+                boolean categoryExists = false;
+                for (MoneyFlowResponseDTO dto : moneyFlowDTOS) {
+                    if (dto.getNameCategory().equals(categoryName)) {
+                        // Se suma al monto acumulado
+                        dto.setTotal(dto.getTotal() + currentAmount);
+                        categoryExists = true;
+                        break;
+                    }
                 }
-            }
 
-            if (!categoryExists) {
-                moneyFlowDTOS.add(new MoneyFlowResponseDTO(categoryName, currentAmount));
+                if (!categoryExists) {
+                    moneyFlowDTOS.add(new MoneyFlowResponseDTO(categoryName, currentAmount));
+                }
             }
         }
         return moneyFlowDTOS;
     }
 
     @Override
-    public List<MoneyFlowSummaryDTO> getMoneyFlowNeto(int year, int firstMonth, int finalMonth) {
+    public List<MoneyFlowSummaryDTO> getMoneyFlowNeto(Long idClient, int year, int firstMonth, int finalMonth) {
+        Client client = clientService.getClientById(idClient);
+
         if(firstMonth < 0 || finalMonth < 0){
             throw new ValidationException("Los meses ingresados son invalidos");
         }
@@ -191,21 +201,25 @@ public class MoneyFlowServiceImpl implements MoneyFlowService {
         List<MoneyFlowSummaryDTO> monetFlowSummaryDTOS = new ArrayList<>();
 
         for (int month = firstMonth; month <= finalMonth; month++) {
+
             double totalIngresos = 0;
             double totalGastos = 0;
             String monthName = "";
 
             for (MoneyFlow moneyFlow : moneyFlows) {
-                if (moneyFlow.getDate().getMonthValue() == month) {
-                    // Nombre del mes
-                    monthName = moneyFlow.getDate().getMonth().name();
+                if(moneyFlow.getClient().getId().equals(idClient)){
+                    if (moneyFlow.getDate().getMonthValue() == month) {
+                        // Nombre del mes
+                        monthName = moneyFlow.getDate().getMonth().name();
 
-                    if (moneyFlow.getType().equals("Ingreso")) {
-                        totalIngresos += moneyFlow.getAmount();
-                    } else if (moneyFlow.getType().equals("Gasto")) {
-                        totalGastos += moneyFlow.getAmount();
+                        if (moneyFlow.getType().equals("Ingreso")) {
+                            totalIngresos += moneyFlow.getAmount();
+                        } else if (moneyFlow.getType().equals("Gasto")) {
+                            totalGastos += moneyFlow.getAmount();
+                        }
                     }
                 }
+
             }
 
             if (!monthName.isEmpty()) {
@@ -218,7 +232,8 @@ public class MoneyFlowServiceImpl implements MoneyFlowService {
 
     //
     @Override
-    public MoneyFlowSummaryDTO getMoneyFlowNetoByMonth(int year, int month) {
+    public MoneyFlowSummaryDTO getMoneyFlowNetoByMonth(Long idClient, int year, int month) {
+        Client client = clientService.getClientById(idClient);
         if(month < 1 || month > 12){
             throw new ValidationException("El mes ingresa no es correcto");
         }
@@ -228,19 +243,36 @@ public class MoneyFlowServiceImpl implements MoneyFlowService {
         Double totalGastos = 0.0;
         String nameMonth = "";
         for (MoneyFlow flow : moneyFlows) {
-            if (flow.getCategory().getType().equals("Ingreso")) {
-                totalIngresos += flow.getAmount();
-            } else if (flow.getCategory().getType().equals("Gasto")) {
-                totalGastos += flow.getAmount();
+            if(flow.getClient().getId().equals(idClient)){
+                if (flow.getCategory().getType().equals("Ingreso")) {
+                    totalIngresos += flow.getAmount();
+                } else if (flow.getCategory().getType().equals("Gasto")) {
+                    totalGastos += flow.getAmount();
+                }
+                nameMonth = flow.getDate().getMonth().name();
             }
-            nameMonth = flow.getDate().getMonth().name();
         }
 
         double montoNeto = totalIngresos - totalGastos;
 
-
         MoneyFlowSummaryDTO moneyFlowSummaryDTO =new  MoneyFlowSummaryDTO(nameMonth, montoNeto);
         return moneyFlowSummaryDTO;
+    }
+
+    @Override
+    public Double getMoneyFlowNetoByRange(Long idClient, LocalDate startDate, LocalDate endDate) {
+        Client client = clientService.getClientById(idClient);
+        List<MoneyFlow> moneyFlows = moneyFlowRepository.getListByDateRange(startDate, endDate);
+        Double amountNet = 0.0;
+
+        for (MoneyFlow flow : moneyFlows) {
+            if (flow.getType().equals("Ingreso")) {
+                amountNet += flow.getAmount();  // Sumar si es un ingreso
+            } else if (flow.getType().equals("Gasto")) {
+                amountNet -= flow.getAmount();  // Restar si es un gasto
+            }
+        }
+        return amountNet;
     }
 
     @Override

@@ -27,13 +27,13 @@ public class ReminderController {
                 HttpStatus.OK);
     }
 
-    @GetMapping("/reminders/user/{id}")
+    @GetMapping("/reminders/client/{id}")
     public ResponseEntity<List<Reminder>> listReminderByClient( @PathVariable("id") Long id){
         return new ResponseEntity<List<Reminder>>(reminderService.findByClient(id),
                 HttpStatus.OK);
     }
 
-    @PostMapping("/reminders/{id}")
+    @PostMapping("/reminders/client/{id}")
     public ResponseEntity<Reminder> Reminderadd(@PathVariable("id") Long id, @Valid @RequestBody ReminderDTO reminderDTO){
         Reminder reminderCreated =reminderService.Reminderadd(reminderDTO,id);
         return new ResponseEntity<Reminder>(reminderCreated,

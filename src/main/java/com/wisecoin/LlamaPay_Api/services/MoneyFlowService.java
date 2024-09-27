@@ -6,6 +6,7 @@ import com.wisecoin.LlamaPay_Api.dtos.response.MoneyFlowResponseDTO;
 import com.wisecoin.LlamaPay_Api.dtos.response.MoneyFlowSummaryDTO;
 import com.wisecoin.LlamaPay_Api.entities.MoneyFlow;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface MoneyFlowService {
@@ -16,8 +17,10 @@ public interface MoneyFlowService {
     public MoneyFlow getMoneyFlowById(Long id);
     public MoneyFlow updateMoneyFlow(Long id, Long categoryId,MoneyFlowRequestDTO moneyFlowRequestDto);
 
-    public List<MoneyFlowResponseDTO> getMoneyFlowByTypeAndMonth(String type, int year, int month);
-    public List<MoneyFlowSummaryDTO> getMoneyFlowNeto(int year, int firstMonth, int finalMonth);
+    public List<MoneyFlowResponseDTO> getMoneyFlowByTypeAndMonth(Long idClient, String type, int year, int month);
+    public List<MoneyFlowSummaryDTO> getMoneyFlowNeto(Long idClient, int year, int firstMonth, int finalMonth);
 
-    public MoneyFlowSummaryDTO getMoneyFlowNetoByMonth(int year, int month);
+    public MoneyFlowSummaryDTO getMoneyFlowNetoByMonth(Long idClient, int year, int month);
+
+    public Double getMoneyFlowNetoByRange(Long idClient, LocalDate startDate, LocalDate endDate);
 }

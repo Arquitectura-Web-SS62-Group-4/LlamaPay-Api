@@ -15,7 +15,7 @@ public class SettingController {
     @Autowired
     SettingService settingService;
 
-    @GetMapping("/settings/user/{id}")
+    @GetMapping("/settings/client/{id}")
     public ResponseEntity<Setting> listSettingByClient(@PathVariable("id") Long id){
         return new ResponseEntity<Setting>(settingService.findByClient(id),
                 HttpStatus.OK);

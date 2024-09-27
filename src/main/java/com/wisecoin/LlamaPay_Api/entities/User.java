@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -18,17 +20,35 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "username", nullable = false, length = 20)
+    @Column(name = "username", nullable = false)
     private String username;
 
-    @Column(name = "password", nullable = false, length = 20)
+    @Column(name = "password", nullable = false)
     private String password;
 
     @Column(name = "enabled", nullable = false)
-    private Boolean enabled;
+    private boolean enabled;
+
+    private LocalDateTime registrationDate;
 
     @JsonIgnore
-    @OneToOne
-    @JoinColumn(name = "client_id", nullable = false)
-    private Client client;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name="users_authorities",
+            joinColumns = {
+                    @JoinColumn(
+                            name="user_id",
+                            referencedColumnName = "id",
+                            nullable = false
+                    )
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(
+                            name="authority_id",
+                            referencedColumnName = "id",
+                            nullable = false
+                    )
+            }
+    )
+    private List<Authority> authorities;
 }
