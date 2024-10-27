@@ -266,10 +266,12 @@ public class MoneyFlowServiceImpl implements MoneyFlowService {
         Double amountNet = 0.0;
 
         for (MoneyFlow flow : moneyFlows) {
-            if (flow.getType().equals("Ingreso")) {
-                amountNet += flow.getAmount();  // Sumar si es un ingreso
-            } else if (flow.getType().equals("Gasto")) {
-                amountNet -= flow.getAmount();  // Restar si es un gasto
+            if(flow.getClient().getId().equals(idClient)){
+                if (flow.getType().equals("Ingreso")) {
+                    amountNet += flow.getAmount();  // Sumar si es un ingreso
+                } else if (flow.getType().equals("Gasto")) {
+                    amountNet -= flow.getAmount();  // Restar si es un gasto
+                }
             }
         }
         return amountNet;
