@@ -5,21 +5,20 @@ import com.wisecoin.LlamaPay_Api.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api")
 public class CategoryController {
     @Autowired
     CategoryService categoryService;
 
-    @GetMapping("/categories")
-    public ResponseEntity<List<CategoryResponseDTO>> listAllCategories(){
-        return new ResponseEntity<List<CategoryResponseDTO>>(categoryService.listAll(),
+    @GetMapping("/categories/type/{type}")
+    public ResponseEntity<List<CategoryResponseDTO>> listAllCategoriesByType(@PathVariable("type")String type){
+        return new ResponseEntity<List<CategoryResponseDTO>>(categoryService.listAllByType(type),
                 HttpStatus.OK);
     }
 

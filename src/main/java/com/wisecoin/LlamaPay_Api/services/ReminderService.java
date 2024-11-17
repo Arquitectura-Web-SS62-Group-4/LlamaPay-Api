@@ -12,7 +12,8 @@ public interface ReminderService {
     public Reminder Reminderadd(ReminderDTO reminderDTO, Long Client_id);
     public Reminder Reminderupdate(ReminderRequestDTO reminderRequestDTO, Long id);
     public Reminder getReminderById(Long id);
+    public ReminderDTO getReminderResponseById(Long id);
     public void Reminderdelete(Long id);
-    List<Reminder> findByClient(Long id);
+    List<ReminderDTO> findByClient(Long id);
     public List<Reminder> ReminderlistAll();
 }

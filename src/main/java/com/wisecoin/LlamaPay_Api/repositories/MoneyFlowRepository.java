@@ -13,7 +13,8 @@ import java.util.List;
 public interface MoneyFlowRepository extends JpaRepository<MoneyFlow,Long> {
     public List<MoneyFlow> findByClient(Client client);
     public List<MoneyFlow> findByType(String type);
-    public boolean existsByName(String name);
+    public List<MoneyFlow> findByNameAndClient_id(String name, Long client_id);
+    public boolean existsByNameAndClient_id(String name, Long client_id);
 
     @Query(nativeQuery = true, value = "" +
             "SELECT * FROM money_flows m " +
@@ -39,5 +40,4 @@ public interface MoneyFlowRepository extends JpaRepository<MoneyFlow,Long> {
             "SELECT * FROM money_flows m " +
             "WHERE m.date BETWEEN :startDate AND :endDate")
     public List<MoneyFlow> getListByDateRange(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
-
 }

@@ -2,8 +2,10 @@ package com.wisecoin.LlamaPay_Api.controllers;
 
 import com.wisecoin.LlamaPay_Api.dtos.MoneyFlowDTO;
 import com.wisecoin.LlamaPay_Api.dtos.request.MoneyFlowRequestDTO;
+import com.wisecoin.LlamaPay_Api.dtos.response.MoneyFlowCategoryDTO;
 import com.wisecoin.LlamaPay_Api.dtos.response.MoneyFlowResponseDTO;
 import com.wisecoin.LlamaPay_Api.dtos.response.MoneyFlowSummaryDTO;
+import com.wisecoin.LlamaPay_Api.dtos.response.MoneyFlowTypeDTO;
 import com.wisecoin.LlamaPay_Api.entities.MoneyFlow;
 import com.wisecoin.LlamaPay_Api.services.MoneyFlowService;
 import jakarta.validation.Valid;
@@ -12,9 +14,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api")
 public class MoneyFlowController {
@@ -27,15 +29,15 @@ public class MoneyFlowController {
                 HttpStatus.OK);
     }
 
-    @GetMapping("/moneyFlows/client/{idClient}/Expenses/year/{year}/month/{month}")
-    public ResponseEntity<List<MoneyFlowResponseDTO>> getMoneyFlowExpensesByMonth(@PathVariable("idClient") Long idClient, @PathVariable("year") int year, @PathVariable("month") int month){
-        return new ResponseEntity<List<MoneyFlowResponseDTO>>(moneyFlowService.getMoneyFlowByTypeAndMonth(idClient, "Gasto",year,month),
+    @GetMapping("/moneyFlows/client/{idClient}/{type}/year/{year}/month/{month}")
+    public ResponseEntity<List<MoneyFlowCategoryDTO>> getMoneyFlowExpensesByMonth(@PathVariable("idClient") Long idClient, @PathVariable("type") String type, @PathVariable("year") int year, @PathVariable("month") int month){
+        return new ResponseEntity<List<MoneyFlowCategoryDTO>>(moneyFlowService.getMoneyFlowByTypeAndMonth(idClient,type,year,month),
                 HttpStatus.OK);
     }
 
-    @GetMapping("/moneyFlows/client/{idClient}/Incomes/year/{year}/month/{month}")
-    public ResponseEntity<List<MoneyFlowResponseDTO>> getMoneyFlowIncomesByMonth(@PathVariable("idClient") Long idClient, @PathVariable("year") int year, @PathVariable("month") int month){
-        return new ResponseEntity<List<MoneyFlowResponseDTO>>(moneyFlowService.getMoneyFlowByTypeAndMonth(idClient,"Ingreso",year, month),
+    @GetMapping("/moneyFlows/client/{idClient}/type/{type}/year/{year}/month/{month}")
+    public ResponseEntity<List<MoneyFlowTypeDTO>> getMoneyFlowTypeAndMonth(@PathVariable("idClient") Long idClient, @PathVariable("type") String type, @PathVariable("year") int year, @PathVariable("month") int month){
+        return new ResponseEntity<List<MoneyFlowTypeDTO>>(moneyFlowService.getListByTypeAndMonth(idClient, type ,year,month),
                 HttpStatus.OK);
     }
 
@@ -51,9 +53,21 @@ public class MoneyFlowController {
                 HttpStatus.OK);
     }
 
-    @GetMapping("/moneyFlows/client/{id}")
-    public ResponseEntity<List<MoneyFlow>> listMoneyFlowsByClient( @PathVariable("id") Long id){
-        return new ResponseEntity<List<MoneyFlow>>(moneyFlowService.findByClient(id),
+    @GetMapping("/moneyFlows/client/{idClient}/Total/type/{type}/year/{year}/month/{month}")
+    public ResponseEntity<MoneyFlowTypeDTO> getTotalByTypeAndMonth(@PathVariable("idClient") Long idClient,@PathVariable("type") String type ,@PathVariable("year") int year, @PathVariable("month") int month){
+        return new ResponseEntity<MoneyFlowTypeDTO>(moneyFlowService.getTotalByTypeAndMonth(idClient,type,year,month),
+                HttpStatus.OK);
+    }
+
+    @GetMapping("/moneyFlows/client/{id}/year/{year}/month/{month}")
+    public ResponseEntity<List<MoneyFlowResponseDTO>> listMoneyFlowsByClient(@PathVariable("id") Long id, @PathVariable("year") Long year, @PathVariable("month") Long month){
+        return new ResponseEntity<List<MoneyFlowResponseDTO>>(moneyFlowService.findByClient(id, year, month),
+                HttpStatus.OK);
+    }
+
+    @GetMapping("/moneyFlows/{id}")
+    public ResponseEntity<MoneyFlowResponseDTO> getMoneyFlowById(@PathVariable("id") Long id){
+        return new ResponseEntity<MoneyFlowResponseDTO>(moneyFlowService.getMoneyFlowResponseById(id),
                 HttpStatus.OK);
     }
 
@@ -71,7 +85,7 @@ public class MoneyFlowController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping("/moneyFlows/client/{id}/category/{categoryId}")
+    @PutMapping("/moneyFlows/{id}/category/{categoryId}")
     public ResponseEntity<MoneyFlow> updateGoal(@PathVariable("id") Long id, @PathVariable("categoryId") Long categoryId,
                                            @Valid @RequestBody MoneyFlowRequestDTO moneyFlowRequestDto){
         MoneyFlow moneyFlowUpdate = moneyFlowService.updateMoneyFlow(id,categoryId,moneyFlowRequestDto);

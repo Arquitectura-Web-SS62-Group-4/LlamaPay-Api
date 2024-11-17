@@ -2,7 +2,7 @@ package com.wisecoin.LlamaPay_Api.controllers;
 
 import com.wisecoin.LlamaPay_Api.dtos.GoalDTO;
 import com.wisecoin.LlamaPay_Api.dtos.request.GoalRequestDTO;
-import com.wisecoin.LlamaPay_Api.entities.Client;
+import com.wisecoin.LlamaPay_Api.dtos.response.GoalResponseDTO;
 import com.wisecoin.LlamaPay_Api.entities.Goal;
 import com.wisecoin.LlamaPay_Api.services.GoalService;
 import jakarta.validation.Valid;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api")
 public class GoalController {
@@ -25,9 +26,15 @@ public class GoalController {
                 HttpStatus.OK);
     }
 
+   @GetMapping("/goals/{id}")
+    public ResponseEntity<GoalDTO> getGoalById(@PathVariable("id") Long id){
+        return new ResponseEntity<GoalDTO>(goalService.getGoalResponseById(id),
+                HttpStatus.OK);
+    }
+
     @GetMapping("/goals/client/{id}")
-    public ResponseEntity<List<Goal>> listGoalByClient( @PathVariable("id") Long id){
-        return new ResponseEntity<List<Goal>>( goalService.findByClient(id),
+    public ResponseEntity<List<GoalResponseDTO>> listGoalByClient(@PathVariable("id") Long id){
+        return new ResponseEntity<List<GoalResponseDTO>>( goalService.findByClient(id),
                 HttpStatus.OK);
     }
 

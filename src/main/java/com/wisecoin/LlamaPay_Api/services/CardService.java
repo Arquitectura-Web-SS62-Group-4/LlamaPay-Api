@@ -10,6 +10,7 @@ import java.util.List;
 public interface CardService {
     public Card addCard(Long clientId, CardDTO cardDto);
     public Card findByClient(Long clientId);
+    public CardRequestDTO findResponseByClient(Long clientId);
     public List<Card> listAll();
     public void deleteCard(Long id);
     public Card getCardById(Long id);

@@ -9,11 +9,11 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MoneyFlowResponseDTO {
-    private Long id;
-    private String name;
-    private String type;
-    private Double amount;
+public class DailyBitResponseDTO {
+    private Long Id;
+    private Boolean view;
     private LocalDate date;
-    private String category;
+    private String title;
+    private String content;
+    private String image;
 }

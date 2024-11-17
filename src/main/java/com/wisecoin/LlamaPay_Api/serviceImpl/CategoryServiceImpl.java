@@ -18,9 +18,10 @@ public class CategoryServiceImpl implements CategoryService {
     CategoryRepository categoryRepository;
 
     @Override
-    public List<CategoryResponseDTO> listAll() {
+    public List<CategoryResponseDTO> listAllByType(String type) {
+        List<Category> list = categoryRepository.getListByType(type);
         List<CategoryResponseDTO> categories = new ArrayList<>();
-        for(Category category: categoryRepository.findAll()){
+        for(Category category: list){
             CategoryResponseDTO categoryResponseDto = new CategoryResponseDTO(
                     category.getId(), category.getNameCategory()
             );

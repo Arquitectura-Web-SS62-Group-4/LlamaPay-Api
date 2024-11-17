@@ -9,5 +9,6 @@ import java.util.List;
 public interface
 GoalRepository extends JpaRepository<Goal, Long> {
     List<Goal> findByClient(Client client);
-    public boolean existsByName(String name);
+    public List<Goal> findByNameAndClient_id(String name, Long client_id);
+    public boolean existsByNameAndClient_id(String name, Long client_id);
 }

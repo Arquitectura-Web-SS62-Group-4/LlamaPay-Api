@@ -1,5 +1,6 @@
 package com.wisecoin.LlamaPay_Api.services;
 
+import com.wisecoin.LlamaPay_Api.dtos.ClientDTO;
 import com.wisecoin.LlamaPay_Api.dtos.UserDTO;
 import com.wisecoin.LlamaPay_Api.entities.User;
 
@@ -8,4 +9,5 @@ public interface UserService {
     public User findById(Long id);
     public User addUser(UserDTO userDTO);
     public User findByUsername(String userName);
+    public User addUserClient(UserDTO userDTO, ClientDTO clientDTO);
 }

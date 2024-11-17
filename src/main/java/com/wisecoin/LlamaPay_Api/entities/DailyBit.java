@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,19 +19,16 @@ public class DailyBit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
-    @Column(name = "title", nullable = false, length = 40)
-    private String title;
-
-    @Column(name = "content", nullable = false, length = 200)
-    private String content;
+    @Column(name = "view", nullable = false)
+    private Boolean view;
 
     @Column(name = "date", nullable = false)
     private LocalDate date;
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "typeBit_id", nullable = false)
-    private TypeBit typeBit;
+    @JoinColumn(name = "bit_id", nullable = false)
+    private Bit bit;
 
     @JsonIgnore
     @ManyToOne

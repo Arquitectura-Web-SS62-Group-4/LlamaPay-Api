@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -25,6 +26,14 @@ public class ReminderServiceImpl implements ReminderService {
 
     @Autowired
     ClientRepository clientRepository;
+
+    public Long reminderIdByTitle(String title, Long clientId){
+        List<Reminder> listNombreDuplicados = reminderRepository.findByTitleAndClient_id(title, clientId);
+        if (!listNombreDuplicados.isEmpty()) {
+            return listNombreDuplicados.get(0).getId();
+        }
+        return null;
+    }
 
     @Override
     public Reminder Reminderadd(ReminderDTO reminderDTO, Long Client_id) {
@@ -37,10 +46,14 @@ public class ReminderServiceImpl implements ReminderService {
             throw new ValidationException("No se puede ingresar esa cantidad");
         }
 
-        if(reminderDTO.getExpiration_date().isBefore(LocalDate.now())){
+        if(reminderDTO.getExpirationDate().isBefore(LocalDate.now())){
             throw new ValidationException("Ingresar una fecha correcta");
         }
 
+        if(reminderRepository.existsByTitleAndClient_id(reminderDTO.getTitle(), Client_id)){
+            throw new ValidationException("El titulo ya se encuentra registrado");
+        }
+        
         if(reminderDTO.getTitle().length()>30){
             throw new ValidationException("Ingresar un titulo de menos 20 caracteres");
         }
@@ -49,8 +62,8 @@ public class ReminderServiceImpl implements ReminderService {
             throw new ValidationException("Ingresar un titulo de menos 200 caracteres");
         }
 
-        Reminder reminder= new Reminder(reminderDTO.getId(),client,reminderDTO.getTitle(),reminderDTO.getDetails(),
-                reminderDTO.getAmount(),reminderDTO.getExpiration_date());
+        Reminder reminder= new Reminder(reminderDTO.getId(),reminderDTO.getTitle(),reminderDTO.getDetails(),
+                reminderDTO.getAmount(),reminderDTO.getExpirationDate(),client);
 
         reminder.setClient(client);
         return reminderRepository.save(reminder);
@@ -59,12 +72,7 @@ public class ReminderServiceImpl implements ReminderService {
 
     @Override
     public Reminder Reminderupdate(ReminderRequestDTO reminderRequestDTO, Long id) {
-
         Reminder reminderFound=getReminderById(id);
-
-        if(!reminderRepository.existsById(id)){
-            throw new ValidationException("No se encontró el recordatorio");
-        }
 
         if(reminderFound!=null){
 
@@ -86,18 +94,23 @@ public class ReminderServiceImpl implements ReminderService {
                 if(reminderRequestDTO.getTitle().length()>30){
                     throw new ValidationException("El titulo no puede tener más de 100 caracteres");
                 }
+                Long existingReminderId = reminderIdByTitle(reminderRequestDTO.getTitle(), id);
+                if (existingReminderId != null && !existingReminderId.equals(id)) {
+                    throw new ValidationException("El titulo ya se encuentra registrado");
+                }
+                // Asignar el nuevo titulo
                 reminderFound.setTitle(reminderRequestDTO.getTitle());
             }
 
-            if(reminderRequestDTO.getExpiration_date()!=null){
-                if(reminderRequestDTO.getExpiration_date().isBefore(LocalDate.now())){
+            if(reminderRequestDTO.getExpirationDate()!=null){
+                if(reminderRequestDTO.getExpirationDate().isBefore(LocalDate.now())){
                     throw new ValidationException("La fecha debe que ser posterior a la actual");
                 }
-                reminderFound.setExpiration_date(reminderRequestDTO.getExpiration_date());
+                reminderFound.setExpirationDate(reminderRequestDTO.getExpirationDate());
             }
 
 
-            reminderRepository.save(reminderFound);
+            return reminderRepository.save(reminderFound);
 
         }
         return null;
@@ -112,6 +125,14 @@ public class ReminderServiceImpl implements ReminderService {
         return reminder;
     }
 
+    @Override
+    public ReminderDTO getReminderResponseById(Long id) {
+        Reminder reminder = getReminderById(id);
+        ReminderDTO reminderDTO = new ReminderDTO(reminder.getId(), reminder.getTitle(),
+                reminder.getDetails(), reminder.getAmount(), reminder.getExpirationDate());
+        return reminderDTO;
+    }
+
 
     @Override
     public void Reminderdelete(Long id) {
@@ -124,12 +145,19 @@ public class ReminderServiceImpl implements ReminderService {
 
 
     @Override
-    public List<Reminder> findByClient(Long id) {
+    public List<ReminderDTO> findByClient(Long id) {
         Client client=clientRepository.findById(id).orElse(null);
         if(client==null){
             throw new ValidationException("Cliente no encontrado");
         }
-        return reminderRepository.findByClient(client);
+        List<Reminder> list = reminderRepository.findByClient(client);
+        List<ReminderDTO> reminderDTOS = new ArrayList<>();
+        for (Reminder reminder : list){
+            ReminderDTO reminderDTO = new ReminderDTO(reminder.getId(), reminder.getTitle(),
+                    reminder.getDetails(), reminder.getAmount(), reminder.getExpirationDate());
+            reminderDTOS.add(reminderDTO);
+        }
+        return reminderDTOS;
     }
 
     @Override

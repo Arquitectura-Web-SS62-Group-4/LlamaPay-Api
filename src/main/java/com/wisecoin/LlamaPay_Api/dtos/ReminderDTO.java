@@ -32,6 +32,6 @@ public class ReminderDTO {
     private Double amount;
 
     @NotNull(message = "La fecha de expiración no puede ser nula")
-    private LocalDate expiration_date;
+    private LocalDate expirationDate;
 
 }

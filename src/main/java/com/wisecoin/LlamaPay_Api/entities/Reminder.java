@@ -18,15 +18,9 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name="reminders")
 public class Reminder {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name="client_id" , nullable = false)
-    private Client client;
 
     @Column(name="title",nullable = false,length=30)
     private String title;
@@ -38,5 +32,10 @@ public class Reminder {
     private Double amount;
 
     @Column(name="expiration_date",nullable=false)
-    private LocalDate expiration_date;
+    private LocalDate expirationDate;
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "client_id", nullable = false)
+    private Client client;
 }

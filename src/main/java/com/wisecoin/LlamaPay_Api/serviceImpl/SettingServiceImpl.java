@@ -52,6 +52,15 @@ public class SettingServiceImpl implements SettingService {
     }
 
     @Override
+    public SettingDTO getSettingResponseById(Long id) {
+        Setting setting = findByClient(id);
+        SettingDTO settingDTO = new SettingDTO(setting.getId(), setting.getTheme(),
+                setting.getSize(), setting.getLanguage());
+
+        return settingDTO;
+    }
+
+    @Override
     public Setting updateSetting(Long id, SettingDTO settingDto) {
         Setting settingFound = getSettingById(id);
         if(settingFound!=null){

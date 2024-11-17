@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MoneyFlowSummaryDTO {
-   private Long monthName;
-   private Double netAmount;
+public class MoneyFlowCategoryDTO {
+    private String nameCategory;
+    private Double total;
 }

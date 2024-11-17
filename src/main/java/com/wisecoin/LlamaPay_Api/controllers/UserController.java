@@ -1,6 +1,8 @@
 package com.wisecoin.LlamaPay_Api.controllers;
 
+import com.wisecoin.LlamaPay_Api.dtos.ClientDTO;
 import com.wisecoin.LlamaPay_Api.dtos.TokenDTO;
+import com.wisecoin.LlamaPay_Api.dtos.UserClientDTO;
 import com.wisecoin.LlamaPay_Api.dtos.UserDTO;
 import com.wisecoin.LlamaPay_Api.dtos.response.ClientResponseDTO;
 import com.wisecoin.LlamaPay_Api.entities.User;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.stream.Collectors;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api")
 public class UserController {
@@ -36,6 +39,12 @@ public class UserController {
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
 
+    @PostMapping("/users/clientRegister")
+    public ResponseEntity<User> addUserClient(@RequestBody UserClientDTO userClientDTO){
+        User newUser = userService.addUserClient(userClientDTO.getUserDTO(),userClientDTO.getClientDTO());
+        return new ResponseEntity<>(newUser, HttpStatus.CREATED);
+    }
+
     @PostMapping("/users/login")
     public ResponseEntity<TokenDTO> login(@RequestBody UserDTO userDTO) {
 
@@ -50,7 +59,7 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<User> listAllUser(@PathVariable Long id){
+    public ResponseEntity<User> listUserById(@PathVariable Long id){
         User userFound = userService.findById(id);
         return new ResponseEntity<>(userFound, HttpStatus.OK);
     }

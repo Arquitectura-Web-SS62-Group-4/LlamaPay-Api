@@ -32,7 +32,8 @@ public class SecurityConfiguration {
             "/api/users/login/**",
 
             // --register
-            "/api/users/register/**"
+            "/api/users/register/**",
+            "/api/users/clientRegister/**",
     };
 
 
@@ -63,42 +64,43 @@ public class SecurityConfiguration {
         http.authorizeHttpRequests(
                 (auth)->auth
                         .requestMatchers(AUTH_WHITELIST).permitAll()
-                        .requestMatchers(HttpMethod.POST,"/api/clients/**").hasAnyAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.GET,"/api/clients/**").hasAnyAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.GET,"/api/cards").hasAnyAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.POST,"/api/suscriptions/**").hasAnyAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.GET,"/api/typeBits/**").hasAnyAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.GET,"/api/premiuns/**").hasAnyAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.PUT,"/api/dailyBits/**").hasAnyAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.GET,"/api/dailyBits/**").hasAnyAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE,"/api/dailyBits/**").hasAnyAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.PUT,"/api/users/**").hasAnyAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.GET,"/api/users/**").hasAnyAuthority("ADMIN")
-
+                        .requestMatchers(HttpMethod.PUT,"/api/users/delete/{id}").hasAnyAuthority("CLIENTE")
                         .requestMatchers(HttpMethod.GET,"/api/clients/{id}").hasAnyAuthority("CLIENTE")
-                        .requestMatchers(HttpMethod.PUT,"/api/clients/{id}").hasAnyAuthority("CLIENTE")
-                        .requestMatchers(HttpMethod.POST,"/api/cards/client/{id}").hasAnyAuthority("CLIENTE")
-                        .requestMatchers(HttpMethod.GET,"/api/cards/client/{id}").hasAnyAuthority("CLIENTE")
-                        .requestMatchers(HttpMethod.PUT,"/api/cards/client/{id}").hasAnyAuthority("CLIENTE")
-                        .requestMatchers(HttpMethod.DELETE,"/api/cards/{id}").hasAnyAuthority("CLIENTE")
-                        .requestMatchers(HttpMethod.GET,"/api/suscriptions/client/{id}").hasAnyAuthority("CLIENTE")
-                        .requestMatchers(HttpMethod.GET,"/api/categories").hasAnyAuthority("CLIENTE")
-                        .requestMatchers(HttpMethod.POST,"/api/dailyBits/**").hasAnyAuthority("CLIENTE")
-                        .requestMatchers(HttpMethod.GET,"/api/dailyBits/client/{id}").hasAnyAuthority("CLIENTE")
+                        .requestMatchers(HttpMethod.GET,"/api/clients/premiun/**").hasAnyAuthority("CLIENTE")
+                        .requestMatchers(HttpMethod.GET,"/api/clients/user/{userId}").hasAnyAuthority("CLIENTE")
+                        .requestMatchers(HttpMethod.PUT,"/api/clients/**").hasAnyAuthority("CLIENTE")
+                        .requestMatchers(HttpMethod.POST,"/api/moneyFlows/**").hasAnyAuthority("CLIENTE")
+                        .requestMatchers(HttpMethod.DELETE,"/api/moneyFlows/**").hasAnyAuthority("CLIENTE")
+                        .requestMatchers(HttpMethod.PUT,"/api/moneyFlows/**").hasAnyAuthority("CLIENTE")
+                        .requestMatchers(HttpMethod.GET,"/api/moneyFlows/client/**").hasAnyAuthority("CLIENTE")
+                        .requestMatchers(HttpMethod.GET,"/api/moneyFlows/{id}").hasAnyAuthority("CLIENTE")
+                        .requestMatchers(HttpMethod.GET,"/api/categories/**").hasAnyAuthority("CLIENTE")
                         .requestMatchers(HttpMethod.POST,"/api/goals/**").hasAnyAuthority("CLIENTE")
                         .requestMatchers(HttpMethod.PUT,"/api/goals/**").hasAnyAuthority("CLIENTE")
                         .requestMatchers(HttpMethod.GET,"/api/goals/client/**").hasAnyAuthority("CLIENTE")
+                        .requestMatchers(HttpMethod.GET,"/api/goals/{id}").hasAnyAuthority("CLIENTE")
                         .requestMatchers(HttpMethod.DELETE,"/api/goals/**").hasAnyAuthority("CLIENTE")
                         .requestMatchers(HttpMethod.POST,"/api/reminders/**").hasAnyAuthority("CLIENTE")
                         .requestMatchers(HttpMethod.PUT,"/api/reminders/**").hasAnyAuthority("CLIENTE")
                         .requestMatchers(HttpMethod.GET,"/api/reminders/client/**").hasAnyAuthority("CLIENTE")
+                        .requestMatchers(HttpMethod.GET,"/api/reminders/{id}").hasAnyAuthority("CLIENTE")
                         .requestMatchers(HttpMethod.DELETE,"/api/reminders/**").hasAnyAuthority("CLIENTE")
+                        .requestMatchers(HttpMethod.POST,"/api/dailyBits/**").hasAnyAuthority("CLIENTE")
+                        .requestMatchers(HttpMethod.GET,"/api/dailyBits/**").hasAnyAuthority("CLIENTE")
+                        .requestMatchers(HttpMethod.PUT,"/api/dailyBits/**").hasAnyAuthority("CLIENTE")
+                        .requestMatchers(HttpMethod.POST,"/api/cards/client/{id}").hasAnyAuthority("CLIENTE")
+                        .requestMatchers(HttpMethod.GET,"/api/cards/**").hasAnyAuthority("CLIENTE")
+                        .requestMatchers(HttpMethod.PUT,"/api/cards/**").hasAnyAuthority("CLIENTE")
+                        .requestMatchers(HttpMethod.DELETE,"/api/cards/**").hasAnyAuthority("CLIENTE")
                         .requestMatchers(HttpMethod.PUT,"/api/settings/**").hasAnyAuthority("CLIENTE")
                         .requestMatchers(HttpMethod.GET,"/api/settings/**").hasAnyAuthority("CLIENTE")
-                        .requestMatchers(HttpMethod.DELETE,"/api/moneyFlows/**").hasAnyAuthority("CLIENTE")
-                        .requestMatchers(HttpMethod.POST,"/api/moneyFlows/**").hasAnyAuthority("CLIENTE")
-                        .requestMatchers(HttpMethod.PUT,"/api/moneyFlows/**").hasAnyAuthority("CLIENTE")
-                        .requestMatchers(HttpMethod.GET,"/api/moneyFlows/client/**").hasAnyAuthority("CLIENTE")
+                        .requestMatchers(HttpMethod.POST,"/api/suscriptions/**").hasAnyAuthority("CLIENTE")
+                        .requestMatchers(HttpMethod.GET,"/api/suscriptions/**").hasAnyAuthority("CLIENTE")
+                        .requestMatchers(HttpMethod.GET,"/api/premiuns").hasAnyAuthority("CLIENTE")
+
+                        .requestMatchers(HttpMethod.GET,"/api/users/**").hasAnyAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.GET,"/api/clients").hasAnyAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.POST,"/api/bits").hasAnyAuthority("ADMIN")
                         .anyRequest().authenticated()
         );
 

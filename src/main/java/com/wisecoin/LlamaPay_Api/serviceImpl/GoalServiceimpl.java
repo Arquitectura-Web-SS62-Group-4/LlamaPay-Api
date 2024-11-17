@@ -3,8 +3,11 @@ package com.wisecoin.LlamaPay_Api.serviceImpl;
 import com.wisecoin.LlamaPay_Api.dtos.GoalDTO;
 import com.wisecoin.LlamaPay_Api.dtos.MoneyFlowDTO;
 import com.wisecoin.LlamaPay_Api.dtos.request.GoalRequestDTO;
+import com.wisecoin.LlamaPay_Api.dtos.response.GoalResponseDTO;
+import com.wisecoin.LlamaPay_Api.dtos.response.MoneyFlowResponseDTO;
 import com.wisecoin.LlamaPay_Api.entities.Client;
 import com.wisecoin.LlamaPay_Api.entities.Goal;
+import com.wisecoin.LlamaPay_Api.entities.MoneyFlow;
 import com.wisecoin.LlamaPay_Api.exceptions.ResourceNotFoundException;
 import com.wisecoin.LlamaPay_Api.exceptions.ValidationException;
 import com.wisecoin.LlamaPay_Api.repositories.ClientRepository;
@@ -15,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -28,6 +32,14 @@ public class GoalServiceimpl implements GoalService {
     @Autowired
     ClientRepository clientRepository;
 
+    public Long goalIdByName(String name, Long clientId){
+        List<Goal> listNombreDuplicados = goalRepository.findByNameAndClient_id(name, clientId);
+        if (!listNombreDuplicados.isEmpty()) {
+            return listNombreDuplicados.get(0).getId();
+        }
+        return null;
+    }
+
     @Override
     public Goal getGoalById(Long id) {
         Goal goal = goalRepository.findById(id).orElse(null);
@@ -35,6 +47,14 @@ public class GoalServiceimpl implements GoalService {
             throw new ResourceNotFoundException("Objetivo no encontrado");
         }
         return goal;
+    }
+
+    @Override
+    public GoalDTO getGoalResponseById(Long id) {
+        Goal goal= getGoalById(id);
+        GoalDTO goalDTO = new GoalDTO(goal.getId(), goal.getName(), goal.getDescription(),
+                    goal.getAmount(), goal.getStartDate(), goal.getDeadline());
+        return goalDTO;
     }
 
     @Override
@@ -48,9 +68,12 @@ public class GoalServiceimpl implements GoalService {
                 if(goalRequestDto.getName().length()<=2){
                     throw new ValidationException("El nombre no puede tener menos de tres caracteres");
                 }
-                if(goalRepository.existsByName(goalRequestDto.getName())){
+                Long existingGoalId = goalIdByName(goalRequestDto.getName(),id);
+                if (existingGoalId != null && !existingGoalId.equals(id)) {
                     throw new ValidationException("El nombre ya se encuentra registrado");
                 }
+
+                // Asignar el nuevo nombre
                 goalFound.setName(goalRequestDto.getName());
             }
 
@@ -72,9 +95,6 @@ public class GoalServiceimpl implements GoalService {
 
             //Validando startDate
             if(goalRequestDto.getStartDate()!=null){
-                if(goalRequestDto.getStartDate().isBefore(today)){
-                    throw new ValidationException("La fecha de inicio no puede ser anterior a la actual");
-                }
                 goalFound.setStartDate(goalRequestDto.getStartDate());
             }
 
@@ -127,7 +147,7 @@ public class GoalServiceimpl implements GoalService {
         if(goalDto.getName().length()<=2){
             throw new ValidationException("El nombre no puede tener menos de tres caracteres");
         }
-        if(goalRepository.existsByName(goalDto.getName())){
+        if(goalRepository.existsByNameAndClient_id(goalDto.getName(), clientId)){
             throw new ValidationException("El nombre ya se encuentra registrado");
         }
 
@@ -161,13 +181,21 @@ public class GoalServiceimpl implements GoalService {
     }
 
     @Override
-    public List<Goal> findByClient(Long clientId){
+    public List<GoalResponseDTO> findByClient(Long clientId){
         Client client = clientRepository.findById(clientId).orElse(null);
         if(client==null){
             throw new ValidationException("Cliente no encontrado");
         }
         updateStatusGoal(clientId, goalRepository.findByClient(client));
-        return goalRepository.findByClient(client);
+        List<Goal> list = goalRepository.findByClient(client);
+        List<GoalResponseDTO> goalResponseDTOS = new ArrayList<>();
+        for(Goal goal : list){
+            Double amountNet = moneyFlowService.getMoneyFlowNetoByRange(clientId, goal.getStartDate(), goal.getDeadline());
+            GoalResponseDTO goalResponseDTO = new GoalResponseDTO(goal.getId(), goal.getName(), goal.getDescription(),
+                    goal.getAmount(), goal.getStartDate(), goal.getDeadline(), goal.getIsSuccessfull(),amountNet);
+            goalResponseDTOS.add(goalResponseDTO);
+        }
+        return goalResponseDTOS;
     }
 
 

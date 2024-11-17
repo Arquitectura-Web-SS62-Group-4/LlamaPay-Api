@@ -7,6 +7,6 @@ import com.wisecoin.LlamaPay_Api.entities.Client;
 import java.util.List;
 
 public interface CategoryService {
-    public List<CategoryResponseDTO> listAll();
+    public List<CategoryResponseDTO> listAllByType(String type);
     public Category getCategoryById(Long id);
 }

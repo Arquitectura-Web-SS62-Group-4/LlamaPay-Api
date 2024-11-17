@@ -16,6 +16,10 @@ public class MoneyFlowRequestDTO {
     private Long id;
 
     @NotNull(message = "El tipo no puede ser nulo")
+    @Size(max = 100, message = "El tamaño maximo de la descripcion es 100 caracteres")
+    private String name;
+
+    @NotNull(message = "El tipo no puede ser nulo")
     private String type; // "Ingreso" o "Gasto"
 
     @NotNull(message = "El monto no puede ser nulo")
@@ -23,8 +27,4 @@ public class MoneyFlowRequestDTO {
 
     @NotNull(message = "La fecha no puede ser nulo")
     private LocalDate date;
-
-    @NotNull(message = "El tipo no puede ser nulo")
-    @Size(max = 100, message = "El tamaño maximo de la descripcion es 100 caracteres")
-    private String name;
 }

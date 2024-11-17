@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api")
 public class CardController {
@@ -25,8 +26,8 @@ public class CardController {
     }
 
     @GetMapping("/cards/client/{id}")
-    public ResponseEntity<Card> listCardByClient( @PathVariable("id") Long id){
-        return new ResponseEntity<Card>(cardService.findByClient(id),
+    public ResponseEntity<CardRequestDTO> listCardByClient( @PathVariable("id") Long id){
+        return new ResponseEntity<CardRequestDTO>(cardService.findResponseByClient(id),
                 HttpStatus.OK);
     }
 
@@ -37,7 +38,7 @@ public class CardController {
                 HttpStatus.OK);
     }
 
-    @PutMapping("/cards/client/{id}")
+    @PutMapping("/cards/{id}")
     public ResponseEntity<Card> updateCard(@PathVariable("id") Long id, @Valid @RequestBody CardRequestDTO cardRequestDto){
         Card cardUpdate = cardService.updateCard(id,cardRequestDto);
         if (cardUpdate!=null) {

@@ -6,6 +6,8 @@ import com.wisecoin.LlamaPay_Api.entities.Card;
 import com.wisecoin.LlamaPay_Api.entities.Client;
 import java.time.format.DateTimeParseException;
 import java.time.YearMonth;
+
+import com.wisecoin.LlamaPay_Api.entities.Goal;
 import com.wisecoin.LlamaPay_Api.exceptions.ResourceNotFoundException;
 import com.wisecoin.LlamaPay_Api.exceptions.ValidationException;
 import com.wisecoin.LlamaPay_Api.repositories.CardRepository;
@@ -30,6 +32,14 @@ public class CardServiceImpl implements CardService {
         if (expirationDate.isBefore(currentMonth)) {
             throw new ValidationException("La fecha de expiración no puede ser anterior a la actual");
         }
+    }
+
+    public Long cardIdByCardNumber(String cardNumber){
+        List<Card> listDuplicados = cardRepository.findByCardNumber(cardNumber);
+        if (!listDuplicados.isEmpty()) {
+            return listDuplicados.get(0).getId();
+        }
+        return null;
     }
 
     @Override
@@ -83,6 +93,14 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
+    public CardRequestDTO findResponseByClient(Long clientId) {
+        Card card = findByClient(clientId);
+        CardRequestDTO cardRequestDTO = new CardRequestDTO(card.getId(), card.getCardNumber(),
+                card.getOwnerName(),card.getExpirationDate(), card.getCvv());
+        return cardRequestDTO;
+    }
+
+    @Override
     public List<Card> listAll() {
         return cardRepository.findAll();
     }
@@ -112,7 +130,8 @@ public class CardServiceImpl implements CardService {
                 if(!(cardRequestDto.getCardNumber().matches("\\d+"))|| cardRequestDto.getCardNumber().length() != 16){
                     throw new ValidationException("El numero de tarjeta debe tener exactamente 16 dígitos");
                 }
-                if(cardRepository.existsByCardNumber(cardRequestDto.getCardNumber())){
+                Long existingCardId = cardIdByCardNumber(cardRequestDto.getCardNumber());
+                if (existingCardId != null && !existingCardId.equals(id)) {
                     throw new ValidationException("El numero de tarjeta ya se encuentra registrado");
                 }
                 cardFound.setCardNumber(cardRequestDto.getCardNumber());

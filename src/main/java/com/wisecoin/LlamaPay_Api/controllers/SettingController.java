@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api")
 public class SettingController {
@@ -16,8 +17,8 @@ public class SettingController {
     SettingService settingService;
 
     @GetMapping("/settings/client/{id}")
-    public ResponseEntity<Setting> listSettingByClient(@PathVariable("id") Long id){
-        return new ResponseEntity<Setting>(settingService.findByClient(id),
+    public ResponseEntity<SettingDTO> listSettingByClient(@PathVariable("id") Long id){
+        return new ResponseEntity<SettingDTO>(settingService.getSettingResponseById(id),
                 HttpStatus.OK);
     }
 

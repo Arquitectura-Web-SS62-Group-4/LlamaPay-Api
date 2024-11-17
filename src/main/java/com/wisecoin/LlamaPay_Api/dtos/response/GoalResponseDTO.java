@@ -9,11 +9,13 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MoneyFlowResponseDTO {
+public class GoalResponseDTO {
     private Long id;
     private String name;
-    private String type;
+    private String description;
     private Double amount;
-    private LocalDate date;
-    private String category;
+    private LocalDate startDate;
+    private LocalDate deadline;
+    private Boolean isSuccessfull;
+    private Double netAmount;
 }

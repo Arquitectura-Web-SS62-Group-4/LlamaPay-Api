@@ -1,16 +1,14 @@
 package com.wisecoin.LlamaPay_Api.services;
 
 import com.wisecoin.LlamaPay_Api.dtos.DailyBitDTO;
-import com.wisecoin.LlamaPay_Api.dtos.request.DailyBitRequestDTO;
+import com.wisecoin.LlamaPay_Api.dtos.response.DailyBitResponseDTO;
 import com.wisecoin.LlamaPay_Api.entities.DailyBit;
 
-import java.util.List;
+import java.time.LocalDate;
 
 public interface DailyBitService {
-    public DailyBit addDailyBit(Long client_id, Long typebit_id, DailyBitDTO dailyBitDTO);
-    public List<DailyBit> findByClient(Long client_id);
-    public List<DailyBit> listAll();
-    public void deleteDailyBit(Long id);
+    public DailyBit addDailyBit(Long client_id, DailyBitDTO dailyBitDTO);
+    public DailyBitResponseDTO getDailyBitResponseById(Long client_id, LocalDate date);
     public DailyBit getDailyBitById(Long id);
-    public DailyBit updateDailyBit(Long id, Long typebit_id, DailyBitRequestDTO dailyBitRequestDTO);
+    public DailyBit updateDailyBit(Long id);
 }

@@ -8,13 +8,19 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="typeBits")
 @Entity
-public class TypeBit {
+@Table(name="bits")
+public class Bit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
-    @Column(name = "name", nullable = false, length = 20)
-    private String name;
+    @Column(name = "title", nullable = false, length = 80)
+    private String title;
+
+    @Column(name = "content", nullable = false, length = 400)
+    private String content;
+
+    @Column(name = "image", nullable = false, length = 250)
+    private String image;
 }
