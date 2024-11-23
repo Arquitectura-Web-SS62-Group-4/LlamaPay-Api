@@ -39,7 +39,7 @@ public class UserController {
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
 
-    @PostMapping("/users/clientRegister")
+    @PostMapping("/users/userClientRegister")
     public ResponseEntity<User> addUserClient(@RequestBody UserClientDTO userClientDTO){
         User newUser = userService.addUserClient(userClientDTO.getUserDTO(),userClientDTO.getClientDTO());
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);

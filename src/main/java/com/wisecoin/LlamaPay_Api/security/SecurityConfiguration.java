@@ -31,9 +31,8 @@ public class SecurityConfiguration {
             // --login
             "/api/users/login/**",
 
-            // --register
-            "/api/users/register/**",
-            "/api/users/clientRegister/**",
+            // --register,
+            "/api/users/userClientRegister/**"
     };
 
 
